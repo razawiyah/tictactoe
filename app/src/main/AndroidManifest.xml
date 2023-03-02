@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ExercisePrescription"
+        tools:targetApi="31">
+        <activity
+            android:name=".AdminChart"
+            android:exported="false" />
+        <activity
+            android:name=".AdminProgressChartOption"
+            android:exported="false" />
+        <activity
+            android:name=".AdminProgressChartList"
+            android:exported="false" />
+        <activity
+            android:name=".AdminExercisePrescription"
+            android:exported="false" />
+        <activity
+            android:name=".About"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateProfile"
+            android:exported="false" />
+        <activity
+            android:name=".UserChart"
+            android:exported="false" />
+        <activity
+            android:name=".UserData"
+            android:exported="false" />
+        <activity
+            android:name=".UserExerciseData"
+            android:exported="false" />
+        <activity
+            android:name=".UserHealthData"
+            android:exported="false" />
+        <activity
+            android:name=".UserProgressChart"
+            android:exported="false" />
+        <activity
+            android:name=".UserExercisePrescription"
+            android:exported="false" />
+        <activity
+            android:name=".UserHomepage"
+            android:exported="false" />
+        <activity
+            android:name=".AdminHomepage"
+            android:exported="false" />
+        <activity
+            android:name=".SafetyPrecaution"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".SignUp"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
