@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">ExercisePrescription</string>
+    <string name="safety_text">
+Guidelines and Safety Precautions\n
+
+1. Choose the appropriate amount and type of exercise.\n\n
+
+2. Terminate the exercise session if any chest pain, shortness of breath, and light-headedness are experienced.\n\n
+
+3. Please warm up before starting to exercise. Ensure the warming up duration lasts for at least 5 minutes or more.\n\n
+
+4. Please cool down after finishing the exercise session. Ensure the cooling down duration lasts for at least 5 minutes or more.\n\n
+
+5. Please include aerobic conditioning workouts which last for at least 20 minutes to 60 minutes.
+</string>
 </resources>
