@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.exerciseprescription.class2.DoctorModel;
 import com.example.exerciseprescription.class2.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,52 +23,39 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignUp extends AppCompatActivity {
+public class SignUpDoctor extends AppCompatActivity {
 
-    TextView loginTV,safetyTV;
-    public SafetyPrecaution safetyPrecaution;
+    TextView loginTV;
 
-    EditText nameET,dobET,heightET,weightET,emailET,passwordET;
+    EditText nameET,emailET,passwordET;
     RadioButton maleRB, femaleRB;
-    CheckBox safetyCB;
     Button signupBtn;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User");
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Doctor");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
-    String id,gender,safetyCheck;
-
+    String id,gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_up_doctor);
 
         loginTV = findViewById(R.id.loginTV);
-        safetyPrecaution = new SafetyPrecaution(this);
-        safetyTV = findViewById(R.id.safetyTV);
 
         nameET = findViewById(R.id.nameET);
-        dobET = findViewById(R.id.dobET);
-        heightET = findViewById(R.id.heightET);
-        weightET = findViewById(R.id.weightET);
         emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
         maleRB = findViewById(R.id.maleRB);
         femaleRB = findViewById(R.id.femaleRB);
-        safetyCB = findViewById(R.id.checkBox);
         signupBtn = findViewById(R.id.signupBtn);
 
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = nameET.getText().toString();
-                String dob = dobET.getText().toString();
-                String height = heightET.getText().toString();
-                String weight = weightET.getText().toString();
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
                 gender = " ";
-                safetyCheck = "";
 
                 if(maleRB.isChecked()){
                     gender= "male";
@@ -75,38 +63,24 @@ public class SignUp extends AppCompatActivity {
                     gender= "female";
                 }
 
-                if(safetyCB.isChecked()){
-                    safetyCheck = "true";
-                }else {
-                    safetyCheck = "false";
-                }
-
                 if (name.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
-                }else if (dob.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
-                }else if (height.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
-                }else if (weight.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpDoctor.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (email.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpDoctor.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (password.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpDoctor.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (gender.isEmpty()){
-                    Toast.makeText(SignUp.this,"Fill in the details!",Toast.LENGTH_LONG).show();
-                } else if(safetyCheck.equals("false")){
-                    Toast.makeText(SignUp.this,"You have not agreed to the Safety & Precautions!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpDoctor.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
                     mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(SignUp.this,"Sign Up Successful!",Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignUpDoctor.this,"Sign Up Successful!",Toast.LENGTH_LONG).show();
                                 fUser = mAuth.getCurrentUser();
                                 id = fUser.getUid();
                                 //add UserModel to DB
-                                UserModel user = new UserModel(name,dob,height,weight,email,password,gender,safetyCheck,id);
+                                DoctorModel user = new DoctorModel(name,email,password,gender,id);
                                 databaseReference.child(id).setValue(user);
                                 mAuth.signOut();
                                 startActivity(new Intent(getApplicationContext(),Login.class));
@@ -121,15 +95,8 @@ public class SignUp extends AppCompatActivity {
         loginTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignUp.this, Login.class));
+                startActivity(new Intent(SignUpDoctor.this, Login.class));
                 finish();
-            }
-        });
-
-        safetyTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                safetyPrecaution.show();
             }
         });
     }

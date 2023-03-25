@@ -16,8 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class Login extends AppCompatActivity {
 
@@ -25,6 +26,8 @@ public class Login extends AppCompatActivity {
     EditText emailET,passwordET;
     Button loginBtn;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser fUser;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,24 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(Login.this, "Welcome Back!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Login.this, AdminHomepage.class));
+                            fUser = mAuth.getCurrentUser();
+                            id = fUser.getUid();
+
+                            //have to make if else patient or doctor
+                            Query patientQ = FirebaseDatabase.getInstance().getReference("Doctor").child(id);
+                            patientQ.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    if(task.getResult().exists()){
+                                        startActivity(new Intent(Login.this, AdminHomepage.class));
+                                        finish();
+                                    }else{
+                                        startActivity(new Intent(Login.this, UserHomepage.class));
+                                        finish();
+                                    }
+                                }
+                            });
+
                         }else{
                             Toast.makeText(Login.this, "Error!"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -59,7 +79,7 @@ public class Login extends AppCompatActivity {
         signupTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Login.this, SignUp.class));
+                startActivity(new Intent(Login.this, SignUpChooseAccount.class));
                 finish();
             }
         });

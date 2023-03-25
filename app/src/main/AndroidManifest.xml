@@ -12,6 +12,15 @@
         android:theme="@style/Theme.ExercisePrescription"
         tools:targetApi="31">
         <activity
+            android:name=".SignUpDoctor"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpChooseAccount"
+            android:exported="false" />
+        <activity
+            android:name=".AdminProgressChartPatientData"
+            android:exported="false" />
+        <activity
             android:name=".AdminChart"
             android:exported="false" />
         <activity
@@ -60,7 +69,7 @@
             android:name=".Login"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
+            android:name=".SignUpPatient"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

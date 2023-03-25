@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/red_bg"
-    tools:context=".AdminExercisePrescription">
+    tools:context=".AdminProgressChartPatientData">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submitBtn"
+        android:id="@+id/editBtn"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="60dp"
@@ -16,7 +16,7 @@
         android:layout_marginEnd="60dp"
         android:background="@drawable/custom_button"
         android:backgroundTint="@color/blue"
-        android:text="SUBMIT"
+        android:text="EDIT DATA"
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
