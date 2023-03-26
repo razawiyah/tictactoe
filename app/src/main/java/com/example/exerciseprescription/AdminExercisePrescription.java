@@ -109,4 +109,10 @@ public class AdminExercisePrescription extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));
+        finish();
+    }
 }
