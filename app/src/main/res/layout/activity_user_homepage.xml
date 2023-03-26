@@ -8,24 +8,14 @@
     tools:context=".UserHomepage">
 
     <LinearLayout
-        android:layout_width="391dp"
-        android:layout_height="827dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        app:layout_constraintTop_toBottomOf="@+id/calendarView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,15 +33,15 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                app:cardCornerRadius="20dp"
-                android:background="@color/grey">
+                android:background="@color/grey"
+                app:cardCornerRadius="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/grey"
-                    android:paddingTop="20dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
 
                     <ImageView
                         android:id="@+id/imageView5"
@@ -64,8 +54,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textAlignment="center"
                         android:text="Exercise\nPrescription"
+                        android:textAlignment="center"
                         android:textColor="@color/maroon"
                         android:textSize="14dp"
                         android:textStyle="bold" />
@@ -133,15 +123,15 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_margin="20dp"
-                app:cardCornerRadius="20dp"
-                android:background="@color/grey">
+                android:background="@color/grey"
+                app:cardCornerRadius="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/grey"
-                    android:paddingTop="20dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
 
                     <ImageView
                         android:layout_width="80dp"
@@ -153,8 +143,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textAlignment="center"
                         android:text="Health\nData"
+                        android:textAlignment="center"
                         android:textColor="@color/maroon"
                         android:textSize="14dp"
                         android:textStyle="bold" />
@@ -205,4 +195,16 @@
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

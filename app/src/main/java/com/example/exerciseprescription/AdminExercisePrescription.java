@@ -87,6 +87,10 @@ public class AdminExercisePrescription extends AppCompatActivity {
 
                                     EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,flexibility,note,ptId,id);
                                     databaseReference.child(id).child(ptId).setValue(prescription);
+                                    Toast.makeText(AdminExercisePrescription.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));
+                                    finish();
+
                                 }
                             }else{
                                 Toast.makeText(AdminExercisePrescription.this,"Patient Doesn't Exist! Please ask patient to register the app!",Toast.LENGTH_LONG).show();
