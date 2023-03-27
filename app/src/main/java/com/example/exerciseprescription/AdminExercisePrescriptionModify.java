@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.exerciseprescription.class2.DoctorEPModel;
-import com.example.exerciseprescription.class2.DoctorModel;
 import com.example.exerciseprescription.class2.EPmodel;
-import com.example.exerciseprescription.class2.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,19 +23,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class AdminExercisePrescription extends AppCompatActivity {
+public class AdminExercisePrescriptionModify extends AppCompatActivity {
 
     EditText nameET,weekET,durationET,intensityET,aerobicET,strengthET,flexibilityET,noteET;
     Button submitBtn;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://exerciseprescription-c1b89-default-rtdb.firebaseio.com/");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
-    String id;
+    String id,patientId;
+
+    public static final String PATIENT_ID = "PATIENTID";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_exercise_prescription);
+        setContentView(R.layout.activity_admin_exercise_prescription_modify);
 
         nameET = findViewById(R.id.nameET);
         weekET = findViewById(R.id.weekET);
@@ -48,6 +49,40 @@ public class AdminExercisePrescription extends AppCompatActivity {
         flexibilityET = findViewById(R.id.flexibilityET);
         noteET = findViewById(R.id.noteET);
         submitBtn = findViewById(R.id.submitBtn);
+
+        fUser = mAuth.getCurrentUser();
+        id = fUser.getUid();
+
+        Intent intent = getIntent();
+        patientId  = intent.getStringExtra(AdminProgressChartOption.PATIENT_ID);
+
+        Query query=FirebaseDatabase.getInstance().getReference("ExercisePrescription").child(id).child(patientId);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot = task.getResult();
+                    String name = snapshot.child("name").getValue().toString();
+                    String week = snapshot.child("week").getValue().toString();
+                    String duration = snapshot.child("duration").getValue().toString();
+                    String intensity = snapshot.child("intensity").getValue().toString();
+                    String aerobic = snapshot.child("aerobic").getValue().toString();
+                    String strength = snapshot.child("strength").getValue().toString();
+                    String flexibility = snapshot.child("flexibility").getValue().toString();
+                    String note = snapshot.child("note").getValue().toString();
+
+                    nameET.setText(name);
+                    weekET.setText(week);
+                    durationET.setText(duration);
+                    intensityET.setText(intensity);
+                    aerobicET.setText(aerobic);
+                    strengthET.setText(strength);
+                    flexibilityET.setText(flexibility);
+                    noteET.setText(note);
+                }
+            }
+        });
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,21 +97,21 @@ public class AdminExercisePrescription extends AppCompatActivity {
                 String note = noteET.getText().toString();
 
                 if (name.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (week.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (duration.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (intensity.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (aerobic.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (strength.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (flexibility.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (note.isEmpty()){
-                    Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
                     Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("name").equalTo(name);
 
@@ -96,13 +131,14 @@ public class AdminExercisePrescription extends AppCompatActivity {
                                     DoctorEPModel model = new DoctorEPModel(ptId,name);
                                     databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
 
-                                    Toast.makeText(AdminExercisePrescription.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));
-                                    finish();
+                                    Toast.makeText(AdminExercisePrescriptionModify.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
+                                    Intent intent2 = new Intent(AdminExercisePrescriptionModify.this,AdminProgressChartOption.class);
+                                    intent2.putExtra(PATIENT_ID,patientId);
+                                    startActivity(intent2);
 
                                 }
                             }else{
-                                Toast.makeText(AdminExercisePrescription.this,"Patient Doesn't Exist! Please ask patient to register the app!",Toast.LENGTH_LONG).show();
+                                Toast.makeText(AdminExercisePrescriptionModify.this,"Patient Doesn't Exist! Please ask patient to register the app!",Toast.LENGTH_LONG).show();
                             }
 
                         }
@@ -117,11 +153,15 @@ public class AdminExercisePrescription extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));
-        finish();
+        Intent intent2 = new Intent(AdminExercisePrescriptionModify.this,AdminProgressChartOption.class);
+        intent2.putExtra(PATIENT_ID,patientId);
+        startActivity(intent2);
     }
 }

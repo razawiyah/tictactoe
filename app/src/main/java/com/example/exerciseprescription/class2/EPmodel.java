@@ -1,14 +1,18 @@
 package com.example.exerciseprescription.class2;
 
 public class EPmodel {
-    String name,week,duration,intensity,aerobic,flexibility,note,ptId,drId;
+    String name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,drId;
 
-    public EPmodel(String name, String week, String duration, String intensity, String aerobic, String flexibility, String note, String ptId, String drId) {
+    public EPmodel() {
+    }
+
+    public EPmodel(String name, String week, String duration, String intensity, String aerobic, String strength, String flexibility, String note, String ptId, String drId) {
         this.name = name;
         this.week = week;
         this.duration = duration;
         this.intensity = intensity;
         this.aerobic = aerobic;
+        this.strength = strength;
         this.flexibility = flexibility;
         this.note = note;
         this.ptId = ptId;
@@ -53,6 +57,14 @@ public class EPmodel {
 
     public void setAerobic(String aerobic) {
         this.aerobic = aerobic;
+    }
+
+    public String getStrength() {
+        return strength;
+    }
+
+    public void setStrength(String strength) {
+        this.strength = strength;
     }
 
     public String getFlexibility() {
