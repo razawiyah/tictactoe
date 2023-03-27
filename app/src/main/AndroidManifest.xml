@@ -12,6 +12,24 @@
         android:theme="@style/Theme.ExercisePrescription"
         tools:targetApi="31" >
         <activity
+            android:name=".UserHealthChart"
+            android:exported="false" />
+        <activity
+            android:name=".UserHeartRateData"
+            android:exported="false" />
+        <activity
+            android:name=".UserBloodPressureData"
+            android:exported="false" />
+        <activity
+            android:name=".UserWeightData"
+            android:exported="false" />
+        <activity
+            android:name=".UserStrengthData"
+            android:exported="false" />
+        <activity
+            android:name=".UserFlexibilityData"
+            android:exported="false" />
+        <activity
             android:name=".SignOut"
             android:exported="false" />
         <activity
@@ -42,10 +60,10 @@
             android:name=".UpdateProfile"
             android:exported="false" />
         <activity
-            android:name=".UserChart"
+            android:name=".UserExerciseChart"
             android:exported="false" />
         <activity
-            android:name=".UserData"
+            android:name=".UserAerobicData"
             android:exported="false" />
         <activity
             android:name=".UserExerciseData"
