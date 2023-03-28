@@ -15,7 +15,6 @@ public class AdminHomepage extends AppCompatActivity {
     View toolbar;
     TextView title;
     ImageView logout;
-
     public SignOut dialog;
 
     @Override
