@@ -100,4 +100,10 @@ public class SignUpDoctor extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(SignUpDoctor.this, SignUpChooseAccount.class));
+        finish();
+    }
 }

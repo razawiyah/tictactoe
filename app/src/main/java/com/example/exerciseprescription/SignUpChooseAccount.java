@@ -35,4 +35,9 @@ public class SignUpChooseAccount extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(SignUpChooseAccount.this, Login.class));
+        finish();    }
 }

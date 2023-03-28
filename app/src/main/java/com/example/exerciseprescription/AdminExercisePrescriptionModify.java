@@ -153,7 +153,7 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
                                     });
 
                                     Toast.makeText(AdminExercisePrescriptionModify.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(AdminExercisePrescriptionModify.this, AdminHomepage.class));
+                                    startActivity(new Intent(AdminExercisePrescriptionModify.this, AdminProgressChartOption.class));
                                     finish();
 
                                 }

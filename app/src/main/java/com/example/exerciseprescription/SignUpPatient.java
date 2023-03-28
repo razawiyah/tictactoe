@@ -133,4 +133,10 @@ public class SignUpPatient extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(SignUpPatient.this, SignUpChooseAccount.class));
+        finish();
+    }
 }
