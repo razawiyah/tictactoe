@@ -167,17 +167,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/homepageBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/homepage_icon" />
@@ -186,6 +187,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
+                android:paddingTop="15dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/maroon"
                 android:textStyle="bold"
@@ -196,10 +198,12 @@
             android:id="@+id/messageBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/message_icon" />
@@ -208,6 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
+                android:paddingTop="15dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/maroon"
                 android:textStyle="bold"
@@ -218,10 +223,12 @@
             android:id="@+id/aboutBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/about_icon" />
@@ -230,6 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
+                android:paddingTop="15dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/maroon"
                 android:textStyle="bold"
@@ -240,10 +248,12 @@
             android:id="@+id/updatePBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:orientation="horizontal">
 
             <ImageView
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/setting_icon" />
@@ -252,6 +262,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
+                android:paddingTop="15dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/maroon"
                 android:textStyle="bold"

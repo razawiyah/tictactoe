@@ -1,7 +1,11 @@
 package com.example.exerciseprescription;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +35,7 @@ public class AdminUpdateProfile extends AppCompatActivity {
 
     View toolbar;
     TextView title;
-    ImageView logout;
+    ImageView logout,menu;
     public SignOut dialog;
 
     EditText nameET,emailET,passwordET;
@@ -41,6 +46,10 @@ public class AdminUpdateProfile extends AppCompatActivity {
     FirebaseUser fUser;
     String id,gender,emailDB,passwordDB;
 
+    DrawerLayout drawerLayout;
+    LinearLayout homepageBtn,messageBtn,aboutBtn,updatePBtn;
+    TextView drName,drName2,genderNav,email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +58,12 @@ public class AdminUpdateProfile extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         title = toolbar.findViewById(R.id.title);
         logout = toolbar.findViewById(R.id.logoutBtn);
+        menu = toolbar.findViewById(R.id.menu);
+
 
         dialog = new SignOut(this);
 
-        title.setText("I-HeLP | Update Profile");
+        title.setText("I-HeLP | Profile Update");
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,13 +99,28 @@ public class AdminUpdateProfile extends AppCompatActivity {
                     passwordET.setText(passwordDB);
 
                     if(genderDB.equals("male")){
-                        maleRB.setSelected(true);
+                        maleRB.setChecked(true);
                     }else if(genderDB.equals("female")){
-                        femaleRB.setSelected(true);
+                        femaleRB.setChecked(true);
                     }
                 }
             }
         });
+
+        maleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                femaleRB.setChecked(false);
+            }
+        });
+        femaleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleRB.setChecked(false);
+            }
+        });
+
+
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +144,8 @@ public class AdminUpdateProfile extends AppCompatActivity {
                     Toast.makeText(AdminUpdateProfile.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (gender.isEmpty()){
                     Toast.makeText(AdminUpdateProfile.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                }else if(!(email.equals(emailDB)) && !(password.equals(passwordDB))){
+                    Toast.makeText(AdminUpdateProfile.this,"Email & Password cannot be changed at the same time!",Toast.LENGTH_LONG).show();
                 }else{
                     DoctorModel user = new DoctorModel(name,email,password,gender,id);
                     databaseReference.child(id).setValue(user);
@@ -126,6 +154,7 @@ public class AdminUpdateProfile extends AppCompatActivity {
                         fUser.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                emailDB=email;
                                 Toast.makeText(AdminUpdateProfile.this, "Email Successfuly Updated", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -141,6 +170,7 @@ public class AdminUpdateProfile extends AppCompatActivity {
                         fUser.updatePassword(password).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                passwordDB=password;
                                 Toast.makeText(AdminUpdateProfile.this, "Password Successfuly Updated", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -152,9 +182,92 @@ public class AdminUpdateProfile extends AppCompatActivity {
                     }
 
                     Toast.makeText(AdminUpdateProfile.this,"Update Profile Successful!",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        drawerLayout=findViewById(R.id.drawer);
+        drName = drawerLayout.findViewById(R.id.nameTV);
+        drName2 = drawerLayout.findViewById(R.id.nameTV2);
+        genderNav = drawerLayout.findViewById(R.id.genderTV);
+        email = drawerLayout.findViewById(R.id.emailTV);
+
+        homepageBtn = drawerLayout.findViewById(R.id.homepageBtn);
+        messageBtn = drawerLayout.findViewById(R.id.messageBtn);
+        aboutBtn = drawerLayout.findViewById(R.id.aboutBtn);
+        updatePBtn = drawerLayout.findViewById(R.id.updatePBtn);
+
+        updatePBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
+
+        Query query2 = FirebaseDatabase.getInstance().getReference("Doctor").child(id);
+
+        query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot = task.getResult();
+                    String name = snapshot.child("name").getValue().toString();
+                    String genderDB = snapshot.child("gender").getValue().toString();
+                    String emailDB = snapshot.child("email").getValue().toString();
+
+                    drName.setText(name);
+                    drName2.setText(name);
+                    genderNav.setText(genderDB);
+                    email.setText(emailDB);
 
                 }
             }
         });
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDrawer(drawerLayout);
+            }
+        });
+
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                featureUnderProgress();
+//                startActivity(new Intent(AdminHomepage.this, AdminHomepage.class));
+//                finish();
+            }
+        });
+
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminUpdateProfile.this, AdminAbout.class));
+                finish();
+            }
+        });
+
+        homepageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminUpdateProfile.this, AdminHomepage.class));
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AdminUpdateProfile.this, AdminHomepage.class));
+        finish();
+    }
+
+    public static void openDrawer(DrawerLayout drawerLayout) {
+
+        drawerLayout.openDrawer(GravityCompat.START);
+
+    }
+
+    public void featureUnderProgress(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Feature is under Progress");
+        builder.setNeutralButton("OK",null);
+        builder.show();
     }
 }

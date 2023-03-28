@@ -99,6 +99,19 @@ public class SignUpDoctor extends AppCompatActivity {
                 finish();
             }
         });
+
+        maleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                femaleRB.setChecked(false);
+            }
+        });
+        femaleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleRB.setChecked(false);
+            }
+        });
     }
 
     @Override

@@ -110,6 +110,19 @@ public class UserUpdateProfile extends AppCompatActivity {
             }
         });
 
+        maleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                femaleRB.setChecked(false);
+            }
+        });
+        femaleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleRB.setChecked(false);
+            }
+        });
+
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +154,8 @@ public class UserUpdateProfile extends AppCompatActivity {
                     Toast.makeText(UserUpdateProfile.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else if (gender.isEmpty()){
                     Toast.makeText(UserUpdateProfile.this,"Fill in the details!",Toast.LENGTH_LONG).show();
+                }else if(!(email.equals(emailDB)) && !(password.equals(passwordDB))){
+                    Toast.makeText(UserUpdateProfile.this,"Email & Password cannot be changed at the same time!",Toast.LENGTH_LONG).show();
                 }else{
                     UserModel user = new UserModel(name,dob,height,weight,email,password,gender,safetyCheck,id);
                     databaseReference.child(id).setValue(user);
@@ -149,6 +164,7 @@ public class UserUpdateProfile extends AppCompatActivity {
                         fUser.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                emailDB=email;
                                 Toast.makeText(UserUpdateProfile.this, "Email Successfuly Updated", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -164,6 +180,7 @@ public class UserUpdateProfile extends AppCompatActivity {
                         fUser.updatePassword(password).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                passwordDB=password;
                                 Toast.makeText(UserUpdateProfile.this, "Password Successfuly Updated", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {

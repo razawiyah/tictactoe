@@ -132,6 +132,19 @@ public class SignUpPatient extends AppCompatActivity {
                 safetyPrecaution.show();
             }
         });
+
+        maleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                femaleRB.setChecked(false);
+            }
+        });
+        femaleRB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maleRB.setChecked(false);
+            }
+        });
     }
 
     @Override
