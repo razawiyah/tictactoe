@@ -12,6 +12,9 @@
         android:theme="@style/Theme.ExercisePrescription"
         tools:targetApi="31" >
         <activity
+            android:name=".UserUpdateProfile"
+            android:exported="false" />
+        <activity
             android:name=".UserAbout"
             android:exported="false" />
         <activity
@@ -69,7 +72,7 @@
             android:name=".AdminAbout"
             android:exported="false" />
         <activity
-            android:name=".UpdateProfile"
+            android:name=".AdminUpdateProfile"
             android:exported="false" />
         <activity
             android:name=".UserExerciseChart"
