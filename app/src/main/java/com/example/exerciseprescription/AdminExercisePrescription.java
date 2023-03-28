@@ -25,6 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 public class AdminExercisePrescription extends AppCompatActivity {
 
     EditText nameET,weekET,durationET,intensityET,aerobicET,strengthET,flexibilityET,noteET;
@@ -33,6 +39,13 @@ public class AdminExercisePrescription extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
     String id;
+    String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+
+    Date c = Calendar.getInstance().getTime();
+
+    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    String formattedDate = df.format(c);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +103,28 @@ public class AdminExercisePrescription extends AppCompatActivity {
                                     fUser = mAuth.getCurrentUser();
                                     id = fUser.getUid();
 
-                                    EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id);
+                                    EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,timeStamp,formattedDate);
                                     databaseReference.child("ExercisePrescription").child(id).child(ptId).setValue(prescription);
 
                                     DoctorEPModel model = new DoctorEPModel(ptId,name);
                                     databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
+
+                                    Query query2 = databaseReference.child("Doctor").child(id);
+                                    query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DataSnapshot snapshot = task.getResult();
+                                                String nameDr = snapshot.child("name").getValue().toString();
+                                                String emailDr = snapshot.child("email").getValue().toString();
+
+                                                EPmodel prescriptionUser = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,formattedDate,nameDr,emailDr);
+                                                databaseReference.child("UserEP").child(ptId).child(timeStamp).setValue(prescriptionUser);
+
+                                            }
+
+                                        }
+                                    });
 
                                     Toast.makeText(AdminExercisePrescription.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));

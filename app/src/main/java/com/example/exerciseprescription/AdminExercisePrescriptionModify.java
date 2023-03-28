@@ -30,7 +30,7 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://exerciseprescription-c1b89-default-rtdb.firebaseio.com/");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
-    String id,patientId;
+    String id,patientId,timeStamp,date;
 
     public static final String PATIENT_ID = "PATIENTID";
 
@@ -71,6 +71,8 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
                     String strength = snapshot.child("strength").getValue().toString();
                     String flexibility = snapshot.child("flexibility").getValue().toString();
                     String note = snapshot.child("note").getValue().toString();
+                    String timeStampOld = snapshot.child("timeStamp").getValue().toString();
+                    String dateOld = snapshot.child("date").getValue().toString();
 
                     nameET.setText(name);
                     weekET.setText(week);
@@ -80,6 +82,8 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
                     strengthET.setText(strength);
                     flexibilityET.setText(flexibility);
                     noteET.setText(note);
+                    timeStamp = timeStampOld;
+                    date = dateOld;
                 }
             }
         });
@@ -125,16 +129,32 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
                                     fUser = mAuth.getCurrentUser();
                                     id = fUser.getUid();
 
-                                    EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id);
+                                    EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,timeStamp,date);
                                     databaseReference.child("ExercisePrescription").child(id).child(ptId).setValue(prescription);
 
                                     DoctorEPModel model = new DoctorEPModel(ptId,name);
                                     databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
 
+                                    Query query2 = databaseReference.child("Doctor").child(id);
+                                    query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DataSnapshot snapshot = task.getResult();
+                                                String nameDr = snapshot.child("name").getValue().toString();
+                                                String emailDr = snapshot.child("email").getValue().toString();
+
+                                                EPmodel prescriptionUser = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,date,nameDr,emailDr);
+                                                databaseReference.child("UserEP").child(ptId).child(timeStamp).setValue(prescriptionUser);
+
+                                            }
+
+                                        }
+                                    });
+
                                     Toast.makeText(AdminExercisePrescriptionModify.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
-                                    Intent intent2 = new Intent(AdminExercisePrescriptionModify.this,AdminProgressChartOption.class);
-                                    intent2.putExtra(PATIENT_ID,patientId);
-                                    startActivity(intent2);
+                                    startActivity(new Intent(AdminExercisePrescriptionModify.this, AdminHomepage.class));
+                                    finish();
 
                                 }
                             }else{
