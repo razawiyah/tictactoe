@@ -3,6 +3,8 @@ package com.example.exerciseprescription;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,9 +17,10 @@ public class UserHomepage extends AppCompatActivity {
     CardView exercisePCard,progressCCard,healthDCard,exerciseDCard;
     View toolbar;
     TextView title;
-    ImageView logout;
+    ImageView logout,menu;
 
     public SignOut dialog;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class UserHomepage extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         title = toolbar.findViewById(R.id.title);
         logout = toolbar.findViewById(R.id.logoutBtn);
+        menu = toolbar.findViewById(R.id.menu);
+
 
         dialog = new SignOut(this);
 
@@ -75,6 +80,21 @@ public class UserHomepage extends AppCompatActivity {
                 finish();
             }
         });
+
+        drawerLayout=findViewById(R.id.drawer);
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDrawer(drawerLayout);
+            }
+        });
+
+    }
+
+    public static void openDrawer(DrawerLayout drawerLayout) {
+
+        drawerLayout.openDrawer(GravityCompat.START);
 
     }
 
