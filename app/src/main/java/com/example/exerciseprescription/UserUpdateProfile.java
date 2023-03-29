@@ -1,7 +1,11 @@
 package com.example.exerciseprescription;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +32,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.Calendar;
+
 public class UserUpdateProfile extends AppCompatActivity {
 
     View toolbar;
     TextView title;
-    ImageView logout;
+    ImageView logout,menu;
     public SignOut dialog;
 
     EditText nameET,dobET,heightET,weightET,emailET,passwordET;
@@ -42,6 +49,10 @@ public class UserUpdateProfile extends AppCompatActivity {
     FirebaseUser fUser;
     String id,gender,emailDB,passwordDB,safetyCheck;
 
+    DrawerLayout drawerLayout;
+    LinearLayout homepageBtn,messageBtn,aboutBtn,updatePBtn;
+    TextView name,name2,age,dob,height,weight,genderTV,email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +61,7 @@ public class UserUpdateProfile extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         title = toolbar.findViewById(R.id.title);
         logout = toolbar.findViewById(R.id.logoutBtn);
+        menu = toolbar.findViewById(R.id.menu);
 
         dialog = new SignOut(this);
 
@@ -102,9 +114,9 @@ public class UserUpdateProfile extends AppCompatActivity {
                     passwordET.setText(passwordDB);
 
                     if(genderDB.equals("male")){
-                        maleRB.setSelected(true);
+                        maleRB.setChecked(true);
                     }else if(genderDB.equals("female")){
-                        femaleRB.setSelected(true);
+                        femaleRB.setChecked(true);
                     }
                 }
             }
@@ -196,5 +208,108 @@ public class UserUpdateProfile extends AppCompatActivity {
             }
         });
 
+        drawerLayout=findViewById(R.id.drawer);
+        name = drawerLayout.findViewById(R.id.nameTV);
+        name2 = drawerLayout.findViewById(R.id.nameTV2);
+        age = drawerLayout.findViewById(R.id.ageTV);
+        dob = drawerLayout.findViewById(R.id.dobTV);
+        height = drawerLayout.findViewById(R.id.heightTV);
+        weight = drawerLayout.findViewById(R.id.weightTV);
+        genderTV = drawerLayout.findViewById(R.id.genderTV);
+        email = drawerLayout.findViewById(R.id.emailTV);
+
+        homepageBtn = drawerLayout.findViewById(R.id.homepageBtn);
+        messageBtn = drawerLayout.findViewById(R.id.messageBtn);
+        aboutBtn = drawerLayout.findViewById(R.id.aboutBtn);
+        updatePBtn = drawerLayout.findViewById(R.id.updatePBtn);
+
+        updatePBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
+
+
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDrawer(drawerLayout);
+
+                Query query2 = FirebaseDatabase.getInstance().getReference("User").child(id);
+
+                query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot = task.getResult();
+                            String nameDB = snapshot.child("name").getValue().toString();
+                            String genderDB = snapshot.child("gender").getValue().toString();
+                            String emailDB = snapshot.child("email").getValue().toString();
+                            String dobDB = snapshot.child("dob").getValue().toString();
+                            String heightDB = snapshot.child("height").getValue().toString();
+                            String weightDB = snapshot.child("weight").getValue().toString();
+
+                            String yearStr = dobDB.substring(dobDB.length() - 4);
+                            int yearOB = Integer.parseInt(yearStr);
+                            Calendar calendar = Calendar.getInstance();
+                            int yearCur = calendar.get(Calendar.YEAR);
+                            int ageNum = yearCur-yearOB;
+                            String ageDB = Integer.toString(ageNum);
+
+                            name.setText(nameDB);
+                            name2.setText(nameDB);
+                            genderTV.setText(genderDB);
+                            email.setText(emailDB);
+                            age.setText(ageDB);
+                            dob.setText(dobDB);
+                            height.setText(heightDB);
+                            weight.setText(weightDB);
+
+
+                        }
+                    }
+                });
+            }
+        });
+
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                featureUnderProgress();
+            }
+        });
+
+        aboutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UserUpdateProfile.this, UserAbout.class));
+                finish();
+            }
+        });
+
+        homepageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UserUpdateProfile.this, UserHomepage.class));
+                finish();
+            }
+        });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(UserUpdateProfile.this, UserHomepage.class));
+        finish();
+    }
+
+    public static void openDrawer(DrawerLayout drawerLayout) {
+
+        drawerLayout.openDrawer(GravityCompat.START);
+
+    }
+
+    public void featureUnderProgress(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Feature is under Progress");
+        builder.setNeutralButton("OK",null);
+        builder.show();
     }
 }

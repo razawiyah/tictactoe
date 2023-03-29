@@ -199,30 +199,30 @@ public class AdminUpdateProfile extends AppCompatActivity {
 
         updatePBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
 
-        Query query2 = FirebaseDatabase.getInstance().getReference("Doctor").child(id);
-
-        query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot = task.getResult();
-                    String name = snapshot.child("name").getValue().toString();
-                    String genderDB = snapshot.child("gender").getValue().toString();
-                    String emailDB = snapshot.child("email").getValue().toString();
-
-                    drName.setText(name);
-                    drName2.setText(name);
-                    genderNav.setText(genderDB);
-                    email.setText(emailDB);
-
-                }
-            }
-        });
-
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDrawer(drawerLayout);
+
+                Query query2 = FirebaseDatabase.getInstance().getReference("Doctor").child(id);
+
+                query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot = task.getResult();
+                            String name = snapshot.child("name").getValue().toString();
+                            String genderDB = snapshot.child("gender").getValue().toString();
+                            String emailDB = snapshot.child("email").getValue().toString();
+
+                            drName.setText(name);
+                            drName2.setText(name);
+                            genderNav.setText(genderDB);
+                            email.setText(emailDB);
+
+                        }
+                    }
+                });
             }
         });
 
@@ -230,8 +230,6 @@ public class AdminUpdateProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 featureUnderProgress();
-//                startActivity(new Intent(AdminHomepage.this, AdminHomepage.class));
-//                finish();
             }
         });
 
