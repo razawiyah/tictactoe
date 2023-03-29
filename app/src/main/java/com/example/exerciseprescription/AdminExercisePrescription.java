@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,6 +19,7 @@ import com.example.exerciseprescription.class2.EPmodel;
 import com.example.exerciseprescription.class2.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,14 +33,16 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class AdminExercisePrescription extends AppCompatActivity {
 
-    EditText nameET,weekET,durationET,intensityET,aerobicET,strengthET,flexibilityET,noteET;
+    EditText weekET,durationET,intensityET,aerobicET,strengthET,flexibilityET,noteET;
     Button submitBtn;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://exerciseprescription-c1b89-default-rtdb.firebaseio.com/");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -48,6 +54,12 @@ public class AdminExercisePrescription extends AppCompatActivity {
     ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     String formattedDate = zonedDateTime.format(formatter);
+
+    List<String> ptName = new ArrayList<>();
+
+    TextInputLayout nameET;
+    AutoCompleteTextView nameATV;
+    ArrayAdapter<String> adapterItems;
 
 
     @Override
@@ -65,10 +77,55 @@ public class AdminExercisePrescription extends AppCompatActivity {
         noteET = findViewById(R.id.noteET);
         submitBtn = findViewById(R.id.submitBtn);
 
+        //set userType
+        Query queryName = databaseReference.child("User");
+
+        queryName.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    String name = dataSnapshot.child("name").getValue().toString();
+                    ptName.add(name);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //dropdown user type
+        nameATV = findViewById(R.id.userType);
+        adapterItems = new ArrayAdapter<String>(AdminExercisePrescription.this, R.layout.dropdown_item,ptName);
+        nameATV.setAdapter(adapterItems);
+        nameATV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+
+                //show success selection
+                Toast.makeText(AdminExercisePrescription.this, "User Type: "+ item, Toast.LENGTH_SHORT).show();
+//                sUser = item;
+            }
+        });
+
+        nameATV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                // Check if the EditText has focus
+                if (hasFocus) {
+                    // If the EditText has focus, set the hint to an empty string
+                    nameET.setHint("");
+                }
+            }
+        });
+
+
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = nameET.getText().toString();
+                String name = nameATV.getText().toString();
                 String week = weekET.getText().toString();
                 String duration = durationET.getText().toString();
                 String intensity = intensityET.getText().toString();

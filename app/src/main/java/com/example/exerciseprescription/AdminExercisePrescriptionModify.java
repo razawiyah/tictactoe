@@ -56,6 +56,9 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
         Intent intent = getIntent();
         patientId  = intent.getStringExtra(AdminProgressChartOption.PATIENT_ID);
 
+        nameET.setFocusable(false);
+        nameET.setFocusableInTouchMode(false);
+
         Query query=FirebaseDatabase.getInstance().getReference("ExercisePrescription").child(id).child(patientId);
 
         query.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
