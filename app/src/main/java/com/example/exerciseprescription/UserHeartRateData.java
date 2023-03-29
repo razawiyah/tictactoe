@@ -16,6 +16,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class UserHeartRateData extends AppCompatActivity {
@@ -27,6 +30,11 @@ public class UserHeartRateData extends AppCompatActivity {
     FirebaseUser fUser;
     String id;
     String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+
+    ZoneId zoneId = ZoneId.of("Asia/Kuala_Lumpur");
+    ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String formattedDate = zonedDateTime.format(formatter);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,10 @@ public class UserHeartRateData extends AppCompatActivity {
 
         fUser = mAuth.getCurrentUser();
         id = fUser.getUid();
+
+        dateET.setText(formattedDate);
+        dateET.setFocusable(false);
+        dateET.setFocusableInTouchMode(false);
 
         submitBtn2.setOnClickListener(new View.OnClickListener() {
             @Override

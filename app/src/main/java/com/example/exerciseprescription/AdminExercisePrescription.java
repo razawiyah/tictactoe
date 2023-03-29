@@ -26,6 +26,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -41,10 +44,10 @@ public class AdminExercisePrescription extends AppCompatActivity {
     String id;
     String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
 
-    Date c = Calendar.getInstance().getTime();
-
-    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-    String formattedDate = df.format(c);
+    ZoneId zoneId = ZoneId.of("Asia/Kuala_Lumpur");
+    ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String formattedDate = zonedDateTime.format(formatter);
 
 
     @Override
