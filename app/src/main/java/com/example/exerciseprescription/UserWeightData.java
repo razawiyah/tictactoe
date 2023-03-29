@@ -25,7 +25,7 @@ public class UserWeightData extends AppCompatActivity {
 
     EditText dateET,weightET;
     Button submitBtn2;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Weight");
+    DatabaseReference   databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://exerciseprescription-c1b89-default-rtdb.firebaseio.com/");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
     String id;
@@ -64,7 +64,9 @@ public class UserWeightData extends AppCompatActivity {
                 }else{
 
                     WeightModel model = new WeightModel(date,weight,id);
-                    databaseReference.child(id).child(timeStamp).setValue(model);
+                    databaseReference.child("Weight").child(id).child(timeStamp).setValue(model);
+
+                    databaseReference.child("User").child(id).child("weight").setValue(weight);
                     Toast.makeText(UserWeightData.this,"Data Saved!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UserWeightData.this, UserHealthData.class));
                     finish();
