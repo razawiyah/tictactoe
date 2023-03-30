@@ -79,7 +79,6 @@ public class AdminExercisePrescription extends AppCompatActivity {
 
         //set userType
         Query queryName = databaseReference.child("User");
-
         queryName.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -109,7 +108,6 @@ public class AdminExercisePrescription extends AppCompatActivity {
 //                sUser = item;
             }
         });
-
         nameATV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -152,7 +150,6 @@ public class AdminExercisePrescription extends AppCompatActivity {
                     Toast.makeText(AdminExercisePrescription.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
                     Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("name").equalTo(name);
-
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -164,10 +161,26 @@ public class AdminExercisePrescription extends AppCompatActivity {
                                     id = fUser.getUid();
 
                                     EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,timeStamp,formattedDate);
-                                    databaseReference.child("ExercisePrescription").child(id).child(ptId).setValue(prescription);
+                                    databaseReference.child("ExercisePrescription").child(id).child(ptId).child(timeStamp).setValue(prescription);
 
-                                    DoctorEPModel model = new DoctorEPModel(ptId,name);
-                                    databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
+                                    Query queryDocEP = databaseReference.child("DoctorEP").child(id).child(ptId);
+
+                                    queryDocEP.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (!(snapshot.exists())) {
+                                                DoctorEPModel model = new DoctorEPModel(ptId,name);
+                                                databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+
 
                                     Query query2 = databaseReference.child("Doctor").child(id);
                                     query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

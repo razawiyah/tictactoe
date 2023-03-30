@@ -6,21 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.exerciseprescription.class2.DoctorEPModel;
+import com.example.exerciseprescription.class2.EPmodel;
 
 import java.util.ArrayList;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.MyViewHolder> {
     Context context;
-    ArrayList<DoctorEPModel> list;
+    ArrayList<EPmodel> list;
     public static final String PATIENT_ID = "PATIENTID";
+    public static final String TIMESTAMP = "TIMESTAMP";
 
-    public RecyclerAdapter(Context context, ArrayList<DoctorEPModel> list) {
+
+    public RecyclerAdapter3(Context context, ArrayList<EPmodel> list) {
         this.context = context;
         this.list = list;
     }
@@ -34,14 +35,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        DoctorEPModel model = list.get(position);
-        holder.teamname.setText(model.getName());
+        EPmodel model = list.get(position);
+        holder.dateTV.setText(model.getDate());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(context,AdminProgressChartListEP.class);
-                intent2.putExtra(PATIENT_ID,model.getId());
+                Intent intent2 = new Intent(context,AdminProgressChartOption.class);
+                intent2.putExtra(PATIENT_ID,model.getPtId());
+                intent2.putExtra(TIMESTAMP,model.getTimeStamp());
                 context.startActivity(intent2);
             }
 
@@ -54,10 +56,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView teamname;
+        TextView dateTV;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            teamname = itemView.findViewById(R.id.teamname);
+
+            dateTV = itemView.findViewById(R.id.teamname);
         }
     }
 }
