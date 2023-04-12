@@ -9,6 +9,14 @@ public class WeightModel {
         this.id = id;
     }
 
+    public WeightModel(String date, String weight) {
+        this.date = date;
+        this.weight = weight;
+    }
+
+    public WeightModel() {
+    }
+
     public String getDate() {
         return date;
     }
