@@ -7,192 +7,157 @@
     android:background="@drawable/red_bg"
     tools:context=".AdminExercisePrescription">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameET"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="32dp"
-        android:layout_height="50dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:ems="10"
-        android:hint="Name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.5">
 
-        <AutoCompleteTextView
-            android:id="@+id/userType"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:inputType="none"
-            android:textColor="@color/black"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/noteET"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Note"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flexibilityET"
-        app:layout_constraintVertical_bias="0.0" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameET"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:ems="10"
+                android:hint="Name">
 
-    <EditText
-        android:id="@+id/flexibilityET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Flexibility"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/strengthET"
-        app:layout_constraintVertical_bias="0.0" />
+                <AutoCompleteTextView
+                    android:id="@+id/userType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:inputType="none"
+                    android:textColor="@color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/strengthET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Strengthening and Residence"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aerobicET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/weekET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Week"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    <EditText
-        android:id="@+id/weekET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Week"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/durationET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Duration per Week"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    <EditText
-        android:id="@+id/durationET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Duration per Week"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/intensityET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Intensity"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    <EditText
-        android:id="@+id/intensityET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Intensity"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/durationET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/aerobicET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Aerobic"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    <EditText
-        android:id="@+id/aerobicET"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/custom_input_white_blue"
-        android:drawablePadding="12dp"
-        android:ems="10"
-        android:hint="Aerobic"
-        android:paddingLeft="10dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/intensityET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/strengthET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Strengthening and Residence"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submitBtn"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="60dp"
-        android:background="@drawable/custom_button"
-        android:backgroundTint="@color/blue"
-        android:text="SUBMIT"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteET"
-        app:layout_constraintVertical_bias="0.0" />
+            <EditText
+                android:id="@+id/flexibilityET"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Flexibility"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/noteET"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/custom_input_white_blue"
+                android:drawablePadding="12dp"
+                android:ems="10"
+                android:hint="Note"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginEnd="60dp"
+                android:background="@drawable/custom_button"
+                android:backgroundTint="@color/blue"
+                android:text="SUBMIT"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
