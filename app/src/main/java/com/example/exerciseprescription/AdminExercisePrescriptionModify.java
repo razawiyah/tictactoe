@@ -63,7 +63,7 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
         id = fUser.getUid();
 
         Intent intent = getIntent();
-        patientId  = intent.getStringExtra(AdminProgressChartOption.PATIENT_ID);
+        patientId  = intent.getStringExtra(RecyclerAdapter3.PATIENT_ID);
         timeStamp = intent.getStringExtra(RecyclerAdapter3.TIMESTAMP);
 
         nameET.setFocusable(false);
@@ -130,57 +130,6 @@ public class AdminExercisePrescriptionModify extends AppCompatActivity {
                 }else if (note.isEmpty()){
                     Toast.makeText(AdminExercisePrescriptionModify.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
-                    /*Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("name").equalTo(name);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                for(DataSnapshot userSnapshot : snapshot.getChildren()){
-                                    String ptId = userSnapshot.getKey();
-
-                                    fUser = mAuth.getCurrentUser();
-                                    id = fUser.getUid();
-
-                                    EPmodel prescription = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,timeStamp,date);
-                                    databaseReference.child("ExercisePrescription").child(id).child(ptId).setValue(prescription);
-
-                                    DoctorEPModel model = new DoctorEPModel(ptId,name);
-                                    databaseReference.child("DoctorEP").child(id).child(ptId).setValue(model);
-
-                                    Query query2 = databaseReference.child("Doctor").child(id);
-                                    query2.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DataSnapshot snapshot = task.getResult();
-                                                String nameDr = snapshot.child("name").getValue().toString();
-                                                String emailDr = snapshot.child("email").getValue().toString();
-
-                                                EPmodel prescriptionUser = new EPmodel(name,week,duration,intensity,aerobic,strength,flexibility,note,ptId,id,date,nameDr,emailDr);
-                                                databaseReference.child("UserEP").child(ptId).child(timeStamp).setValue(prescriptionUser);
-
-                                            }
-
-                                        }
-                                    });
-
-                                    Toast.makeText(AdminExercisePrescriptionModify.this,"Prescription Saved!",Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(AdminExercisePrescriptionModify.this, AdminProgressChartOption.class));
-                                    finish();
-
-                                }
-                            }else{
-                                Toast.makeText(AdminExercisePrescriptionModify.this,"Patient Doesn't Exist! Please ask patient to register the app!",Toast.LENGTH_LONG).show();
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-*/
 
                     Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("name").equalTo(name);
                     query.addListenerForSingleValueEvent(new ValueEventListener() {

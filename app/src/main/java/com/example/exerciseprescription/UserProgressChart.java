@@ -22,7 +22,7 @@ public class UserProgressChart extends AppCompatActivity {
         userEDBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserProgressChart.this, UserExerciseChart.class));
+                startActivity(new Intent(UserProgressChart.this, UserHealthChart.class));
                 finish();
             }
         });
@@ -30,7 +30,7 @@ public class UserProgressChart extends AppCompatActivity {
         userHDBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserProgressChart.this, UserHealthChart.class));
+                startActivity(new Intent(UserProgressChart.this, UserExerciseChart.class));
                 finish();
             }
         });

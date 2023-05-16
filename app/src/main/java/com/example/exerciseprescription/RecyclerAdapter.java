@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.exerciseprescription.class2.DoctorEPModel;
+import com.example.exerciseprescription.class2.EPmodel;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     Context context;
     ArrayList<DoctorEPModel> list;
     public static final String PATIENT_ID = "PATIENTID";
+    public static final String TIMESTAMP = "TIMESTAMP";
+
 
     public RecyclerAdapter(Context context, ArrayList<DoctorEPModel> list) {
         this.context = context;
@@ -34,14 +37,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+//        EPmodel model = list.get(position);
         DoctorEPModel model = list.get(position);
         holder.teamname.setText(model.getName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(context,AdminProgressChartListEP.class);
+                Intent intent2 = new Intent(context,AdminProgressChartOption.class);
                 intent2.putExtra(PATIENT_ID,model.getId());
+//                intent2.putExtra(TIMESTAMP,model.getTimeStamp());
                 context.startActivity(intent2);
             }
 

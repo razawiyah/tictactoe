@@ -1,5 +1,6 @@
 package com.example.exerciseprescription;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,22 +11,28 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.exerciseprescription.class2.AerobicModel;
+import com.example.exerciseprescription.class2.BloodPressureModel;
 import com.example.exerciseprescription.class2.HeartRateModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormatSymbols;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class UserHeartRateData extends AppCompatActivity {
 
     EditText dateET,resthrET,peakhrET;
     Button submitBtn2;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("HeartRate");
+    DatabaseReference   databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://exerciseprescription-c1b89-default-rtdb.firebaseio.com/");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
     String id;
@@ -35,6 +42,12 @@ public class UserHeartRateData extends AppCompatActivity {
     ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     String formattedDate = zonedDateTime.format(formatter);
+
+    DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("d");
+    String dayDate = zonedDateTime.format(formatterDate);
+
+    DateTimeFormatter formatterMonth = DateTimeFormatter.ofPattern("MMMM");
+    String month = zonedDateTime.format(formatterMonth);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,7 @@ public class UserHeartRateData extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String date = dateET.getText().toString();
+                String dateS = date.replaceAll("[^\\d]", "");
                 String resthr = resthrET.getText().toString();
                 String peakhr = peakhrET.getText().toString();
 
@@ -70,14 +84,61 @@ public class UserHeartRateData extends AppCompatActivity {
                     Toast.makeText(UserHeartRateData.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
 
+                    databaseReference.child("HeartRateM").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(!snapshot.exists()){
+                                for (int m = 1; m <= 12; m++) {
+                                    // set the month name
+                                    String month = getMonthName(m);
+
+                                    // get the number of days in the month
+                                    int daysInMonth = getDaysInMonth(m);
+
+                                    // loop through all days in the month
+                                    for (int d = 1; d <= daysInMonth; d++) {
+                                        // set the day string with leading zero if necessary
+                                        String day = (d < 10) ? "0" + d : "" + d;
+
+                                        // create a new WeightModel with 0 weight value
+                                        HeartRateModel model = new HeartRateModel(day, "0","0");
+
+                                        // set the value in the database
+                                        databaseReference.child("HeartRateM").child(id).child(month).child(day).setValue(model);
+                                    }
+                                }
+                            }
+
+                            //by month data
+                            HeartRateModel modelMonth = new HeartRateModel(dayDate,resthr,peakhr);
+                            databaseReference.child("HeartRateM").child(id).child(month).child(dayDate).setValue(modelMonth);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
                     HeartRateModel model = new HeartRateModel(date,resthr,peakhr,id);
-                    databaseReference.child(id).child(timeStamp).setValue(model);
+                    databaseReference.child("HeartRate").child(id).child(dateS).setValue(model);
                     Toast.makeText(UserHeartRateData.this,"Data Saved!",Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UserHeartRateData.this, UserHealthData.class));
                     finish();
                 }
             }
         });
+    }
+
+    private static String getMonthName(int month) {
+        return new DateFormatSymbols().getMonths()[month-1];
+    }
+
+    private static int getDaysInMonth(int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month-1);
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     @Override

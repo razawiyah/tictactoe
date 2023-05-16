@@ -4,6 +4,14 @@ public class AerobicModel {
 
     String date,type,intensity,duration,rpe,note,id;
 
+    public AerobicModel() {
+    }
+
+    public AerobicModel(String date, String duration) {
+        this.date = date;
+        this.duration = duration;
+    }
+
     public AerobicModel(String date, String type, String intensity, String duration, String rpe, String note, String id) {
         this.date = date;
         this.type = type;

@@ -12,6 +12,9 @@
         android:theme="@style/Theme.ExercisePrescription"
         tools:targetApi="31">
         <activity
+            android:name=".ChartExample"
+            android:exported="false" />
+        <activity
             android:name=".AdminProgressChartListEP"
             android:exported="false" />
         <activity

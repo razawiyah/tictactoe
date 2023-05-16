@@ -105,7 +105,6 @@ public class AdminExercisePrescription extends AppCompatActivity {
 
                 //show success selection
                 Toast.makeText(AdminExercisePrescription.this, "User Type: "+ item, Toast.LENGTH_SHORT).show();
-//                sUser = item;
             }
         });
         nameATV.setOnFocusChangeListener(new View.OnFocusChangeListener() {

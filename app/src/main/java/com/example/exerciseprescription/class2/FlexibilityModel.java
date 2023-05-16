@@ -1,14 +1,22 @@
 package com.example.exerciseprescription.class2;
 
 public class FlexibilityModel {
-    String date,type,intensity,repetition,set,note,id;
+    String date,type,intensity,repset,duration,note,id;
 
-    public FlexibilityModel(String date, String type, String intensity, String repetition, String set, String note, String id) {
+    public FlexibilityModel() {
+    }
+
+    public FlexibilityModel(String date, String duration) {
+        this.date = date;
+        this.duration = duration;
+    }
+
+    public FlexibilityModel(String date, String type, String intensity, String repset, String duration, String note, String id) {
         this.date = date;
         this.type = type;
         this.intensity = intensity;
-        this.repetition = repetition;
-        this.set = set;
+        this.repset = repset;
+        this.duration = duration;
         this.note = note;
         this.id = id;
     }
@@ -37,20 +45,20 @@ public class FlexibilityModel {
         this.intensity = intensity;
     }
 
-    public String getRepetition() {
-        return repetition;
+    public String getRepset() {
+        return repset;
     }
 
-    public void setRepetition(String repetition) {
-        this.repetition = repetition;
+    public void setRepset(String repset) {
+        this.repset = repset;
     }
 
-    public String getSet() {
-        return set;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setSet(String set) {
-        this.set = set;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public String getNote() {

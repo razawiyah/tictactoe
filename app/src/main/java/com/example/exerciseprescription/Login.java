@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +27,7 @@ import com.google.firebase.database.Query;
 
 public class Login extends AppCompatActivity {
 
-    TextView signupTV;
+    TextView signupTV,forgotpsTV;
     EditText emailET,passwordET;
     Button loginBtn;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -37,6 +40,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         signupTV = findViewById(R.id.signupTV);
+        forgotpsTV = findViewById(R.id.forgotpsTV);
         emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
         loginBtn = findViewById(R.id.loginBtn);
@@ -85,6 +89,73 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         });
+
+        forgotpsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showForgotPasswordDialog();
+
+
+                /*String email = emailET.getText().toString().trim();
+
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(Login.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Send password reset email
+                    mAuth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(Login.this, "Password reset email sent", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(Login.this, "Failed to send password reset email", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }*/
+            }
+        });
+    }
+
+    private void showForgotPasswordDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_forgot_password, null);
+        dialogBuilder.setView(dialogView);
+
+        EditText emailEditText = dialogView.findViewById(R.id.emailEditText);
+        Button resetButton = dialogView.findViewById(R.id.resetButton);
+
+        AlertDialog dialog = dialogBuilder.create();
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailEditText.getText().toString().trim();
+
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(Login.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Send password reset email
+                    mAuth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(Login.this, "Password reset email sent", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(Login.this, "Failed to send password reset email", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     @Override

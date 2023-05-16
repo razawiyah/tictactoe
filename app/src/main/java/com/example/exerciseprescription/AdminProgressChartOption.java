@@ -26,7 +26,7 @@ public class AdminProgressChartOption extends AppCompatActivity {
         exercisePCard = findViewById(R.id.exercisePCard);
 
         Intent intent = getIntent();
-        if(!((RecyclerAdapter3.PATIENT_ID).isEmpty())){
+        if(!((RecyclerAdapter.PATIENT_ID).isEmpty())){
             patientId  = intent.getStringExtra(RecyclerAdapter3.PATIENT_ID);
         }else if(!((AdminExercisePrescriptionModify.PATIENT_ID).isEmpty())){
             patientId  = intent.getStringExtra(AdminExercisePrescriptionModify.PATIENT_ID);
@@ -36,7 +36,7 @@ public class AdminProgressChartOption extends AppCompatActivity {
             patientId  = intent.getStringExtra(AdminHealthChart.PATIENT_ID);
         }
 
-        timeStamp = intent.getStringExtra(RecyclerAdapter3.TIMESTAMP);
+        timeStamp = intent.getStringExtra(RecyclerAdapter.TIMESTAMP);
 
 
         exerciseDCard.setOnClickListener(new View.OnClickListener() {
@@ -44,7 +44,6 @@ public class AdminProgressChartOption extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(AdminProgressChartOption.this,AdminExerciseChart.class);
                 intent2.putExtra(PATIENT_ID,patientId);
-                intent2.putExtra(TIMESTAMP,timeStamp);
                 startActivity(intent2);
                 finish();
             }
@@ -55,7 +54,6 @@ public class AdminProgressChartOption extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent2 = new Intent(AdminProgressChartOption.this,AdminHealthChart.class);
                 intent2.putExtra(PATIENT_ID,patientId);
-                intent2.putExtra(TIMESTAMP,timeStamp);
                 startActivity(intent2);
                 finish();
             }
@@ -64,9 +62,10 @@ public class AdminProgressChartOption extends AppCompatActivity {
         exercisePCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminExercisePrescriptionModify.class);
+
+                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminProgressChartListEP.class);
                 intent2.putExtra(PATIENT_ID,patientId);
-                intent2.putExtra(TIMESTAMP,timeStamp);
+//                intent2.putExtra(TIMESTAMP,timeStamp);
                 startActivity(intent2);
                 finish();
             }

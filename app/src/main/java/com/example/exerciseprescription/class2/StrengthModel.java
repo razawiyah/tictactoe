@@ -1,15 +1,32 @@
 package com.example.exerciseprescription.class2;
 
 public class StrengthModel {
-    String date,type,intensity,duration,note,id;
+    String date,type,intensity,repset,duration,note,id;
 
-    public StrengthModel(String date, String type, String intensity, String duration, String note, String id) {
+    public StrengthModel() {
+    }
+
+    public StrengthModel(String date, String duration) {
+        this.date = date;
+        this.duration = duration;
+    }
+
+    public StrengthModel(String date, String type, String intensity, String repset, String duration, String note, String id) {
         this.date = date;
         this.type = type;
         this.intensity = intensity;
+        this.repset = repset;
         this.duration = duration;
         this.note = note;
         this.id = id;
+    }
+
+    public String getRepset() {
+        return repset;
+    }
+
+    public void setRepset(String repset) {
+        this.repset = repset;
     }
 
     public String getDate() {

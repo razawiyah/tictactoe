@@ -41,7 +41,7 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.MyVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(context,AdminProgressChartOption.class);
+                Intent intent2 = new Intent(context,AdminExercisePrescriptionModify.class);
                 intent2.putExtra(PATIENT_ID,model.getPtId());
                 intent2.putExtra(TIMESTAMP,model.getTimeStamp());
                 context.startActivity(intent2);

@@ -1,13 +1,30 @@
 package com.example.exerciseprescription.class2;
 
 public class BloodPressureModel {
-    String date,systolic,diastolic,id;
+    String date,systolic,diastolic,id,mbp;
+
+    public BloodPressureModel() {
+    }
+
+    public BloodPressureModel(String date, String systolic, String diastolic) {
+        this.date = date;
+        this.systolic = systolic;
+        this.diastolic = diastolic;
+    }
 
     public BloodPressureModel(String date, String systolic, String diastolic, String id) {
         this.date = date;
         this.systolic = systolic;
         this.diastolic = diastolic;
         this.id = id;
+    }
+
+    public String getMbp() {
+        return mbp;
+    }
+
+    public void setMbp(String mbp) {
+        this.mbp = mbp;
     }
 
     public String getDate() {
