@@ -53,15 +53,6 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
 
             getStartBtn = findViewById(R.id.getStartBtn);
-/*
-            getStartBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, Login.class));
-                    finish();
-                }
-            });
-*/
         }
 
 
