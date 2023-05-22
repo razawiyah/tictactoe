@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.exerciseprescription.class2.AerobicModel;
+import com.example.exerciseprescription.class2.StrengthModel;
 import com.example.exerciseprescription.class2.WeightModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,6 +76,7 @@ public class UserWeightData extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String date = dateET.getText().toString();
+                String dateS = date.replaceAll("[^\\d]", "");
                 String weight = weightET.getText().toString();
 
                 if (date.isEmpty()){
@@ -83,6 +85,7 @@ public class UserWeightData extends AppCompatActivity {
                     Toast.makeText(UserWeightData.this,"Fill in the details!",Toast.LENGTH_LONG).show();
                 }else{
 
+/*
                     databaseReference.child("WeightD").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -106,8 +109,10 @@ public class UserWeightData extends AppCompatActivity {
 
                         }
                     });
+*/
 
-
+                    WeightModel model = new WeightModel(date,weight);
+                    databaseReference.child("Weight").child(id).child(dateS).setValue(model);
 
                     databaseReference.child("WeightM").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

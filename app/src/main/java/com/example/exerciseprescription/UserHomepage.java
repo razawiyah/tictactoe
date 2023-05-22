@@ -12,9 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class UserHomepage extends AppCompatActivity {
     CardView exercisePCard,progressCCard,healthDCard,exerciseDCard;
@@ -39,6 +42,8 @@ public class UserHomepage extends AppCompatActivity {
     String id;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
+
+    CalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +188,22 @@ public class UserHomepage extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(UserHomepage.this, UserUpdateProfile.class));
                 finish();
+            }
+        });
+
+        calendarView = findViewById(R.id.calendarView);
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                // Convert the selected date to the desired format (e.g., YYYY-MM-DD)
+                String selectedDate = String.format(Locale.getDefault(), "%02d%02d%04d", dayOfMonth, month + 1,year);
+
+                // Create an Intent to start the next activity
+                Toast.makeText(UserHomepage.this, selectedDate, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserHomepage.this, UserListOption.class);
+                intent.putExtra("selectedDate", selectedDate);
+                startActivity(intent);
             }
         });
 
