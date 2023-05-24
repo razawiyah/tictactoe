@@ -36,23 +36,12 @@
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/weekBtn"
-            android:layout_width="110dp"
-            android:layout_height="50dp"
-            android:background="@drawable/custom_button_rec_line"
-            android:text="WEEK"
-            android:textColor="@color/maroon"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/monthBtn"
             android:layout_width="110dp"
             android:layout_height="50dp"
-            android:background="@drawable/custom_button_rec_line"
+            android:background="@drawable/custom_button_rec_red"
             android:text="month"
             android:textColor="@color/white"
-            android:backgroundTint="@color/maroon"
             android:textSize="20dp"
             android:textStyle="bold" />
 

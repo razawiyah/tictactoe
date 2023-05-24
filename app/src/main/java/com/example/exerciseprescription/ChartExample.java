@@ -3,16 +3,21 @@ package com.example.exerciseprescription;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.exerciseprescription.class2.AerobicModel;
 import com.example.exerciseprescription.class2.BloodPressureModel;
@@ -21,12 +26,14 @@ import com.example.exerciseprescription.class2.HeartRateModel;
 import com.example.exerciseprescription.class2.StrengthModel;
 import com.example.exerciseprescription.class2.WeightModel;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -39,13 +46,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
@@ -86,7 +100,13 @@ public class ChartExample extends AppCompatActivity {
     DateTimeFormatter formatterYear = DateTimeFormatter.ofPattern("yyyy");
     String year = zonedDateTime.format(formatterYear);
 
-    Button weekBtn,monthBtn,yearBtn;
+    Button monthBtn,yearBtn;
+    boolean isYearButtonClicked = false;
+    String[] monthLabels,dayLabels;
+
+    ArrayList<BarEntry> systolicEntryArrayList = new ArrayList<>();
+    ArrayList<BarEntry> diastolicEntryArrayList = new ArrayList<>();
+    private IndexAxisValueFormatter xAxisFormatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +116,6 @@ public class ChartExample extends AppCompatActivity {
         barChart = findViewById(R.id.barChart);
         chartTitle = findViewById(R.id.chartTitle);
 
-        weekBtn = findViewById(R.id.weekBtn);
         monthBtn = findViewById(R.id.monthBtn);
         yearBtn = findViewById(R.id.yearBtn);
 
@@ -116,254 +135,29 @@ public class ChartExample extends AppCompatActivity {
         Intent intent2 = getIntent();
         queryPath2  = intent2.getStringExtra(UserHealthChart.CHART_TYPE);
 
-        if(queryPath.equals("weight")){
-            weightChartMonth();
-        }else if(queryPath.equals("bloodPressure")){
-            bloodPressureChartMonth();
-            chartTitle.setText("Blood Pressure Chart");
-        }else if(queryPath.equals("heartRate")){
-            heartRateChartMonth();
-            chartTitle.setText("Heart Rate Chart");
-        }else if(queryPath.equals("aerobic")){
-            aerobicChartMonth();
-            chartTitle.setText("Aerobic Chart");
-        }else if(queryPath.equals("flexibility")){
-            flexChartMonth();
-            chartTitle.setText("Flexibility Chart");
-        }else if(queryPath.equals("strength")){
-            strengthChartMonth();
-            chartTitle.setText("Strengthening Chart");
-        }
-    }
+        handleChartDisplay(queryPath);
 
-    public void weightChart(){
-        query = databaseReference.child("WeightM").child(id).child(month);
-        query.addValueEventListener(new ValueEventListener() {
+        yearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                weightList.clear();
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    WeightModel weight = ds.getValue(WeightModel.class);
-                    weightList.add(new WeightModel(weight.getDate(),weight.getWeight()));
-                    Log.w(TAG, "Data : date="+weight.getDate() + ", weight="+weight.getWeight());
-                    Log.w(TAG, "list size = "+weightList.size());
-                }
-
-                for(int i=0; i< weightList.size(); i++){
-                    String date = weightList.get(i).getDate();
-                    float weight = Float.parseFloat(weightList.get(i).getWeight());
-                    Log.w(TAG, "Loop Data : date="+date + ", weight="+weight);
-
-                    barEntryArrayList.add(new BarEntry(i, weight));
-//                    labelNames.add(date);
-                }
-
-                String lastDate = Integer.toString(getDaysInMonth(monthNum));
-                BarDataSet barDataSet = new BarDataSet(barEntryArrayList,"01-"+lastDate+" "+month+" "+year);
-                barDataSet.setColors(ColorTemplate.createColors(barColors));
-
-                boolean hasNonZeroValue = weightList.stream()
-                        .map(WeightModel::getWeight)
-                        .map(Float::parseFloat)
-                        .anyMatch(w -> w != 0);
-
-                barDataSet.setDrawValues(hasNonZeroValue);
-
-                /*for(int i=0; i< weightList.size(); i++){
-                    float weightF = Float.parseFloat(weightList.get(i).getWeight());
-
-                    if(weightF==0){
-                        barDataSet.setDrawValues(false);
-                    }
-                }*/
-
-                //description
-                barChart.getDescription().setEnabled(false);
-
-
-                BarData barData = new BarData(barDataSet);
-                barChart.setData(barData);
-
-                YAxis leftAxis = barChart.getAxisLeft();
-//                leftAxis.setDrawAxisLine(false);
-                leftAxis.setDrawGridLines(false);
-//                leftAxis.setDrawLabels(false);
-                leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(100f);
-
-                YAxis rightAxis = barChart.getAxisRight();
-                rightAxis.setDrawAxisLine(false);
-                rightAxis.setDrawGridLines(false);
-                rightAxis.setDrawLabels(false);
-
-                XAxis xAxis = barChart.getXAxis();
-//                xAxis.setValueFormatter(new IndexAxisValueFormatter(labelNames));
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
-//                xAxis.setDrawAxisLine(false);
-//                xAxis.setGranularity(1f);
-//                xAxis.setLabelCount(labelNames.size());
-//                xAxis.setLabelRotationAngle(0);
-
-//                barChart.animateY(2000);
-                barChart.invalidate();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onClick(View v) {
+                isYearButtonClicked = true;
+                handleChartDisplay(queryPath);
+                yearBtn.setTextColor(ContextCompat.getColor(ChartExample.this, R.color.white));
+                yearBtn.setBackgroundResource(R.drawable.custom_button_rec_red);
+                monthBtn.setTextColor(ContextCompat.getColor(ChartExample.this, R.color.maroon));
+                monthBtn.setBackgroundResource(R.drawable.custom_button_rec_line);
             }
         });
-    }
 
-    public void weightChartDay2(){
-        query = databaseReference.child("WeightD").child(id);
-        query.addValueEventListener(new ValueEventListener() {
+        monthBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                weightList.clear();
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    WeightModel weight = ds.getValue(WeightModel.class);
-                    weightList.add(new WeightModel(weight.getDate(),weight.getWeight()));
-                }
-
-                for(int i=0; i< weightList.size(); i++){
-                    String date = weightList.get(i).getDate();
-                    float weight = Float.parseFloat(weightList.get(i).getWeight());
-
-                    barEntryArrayList.add(new BarEntry(i,weight));
-                    labelNames.add(date);
-                }
-
-
-                BarDataSet barDataSet = new BarDataSet(barEntryArrayList,"Daily Weight");
-                barDataSet.setColors(ColorTemplate.createColors(barColors));
-
-                //description
-                barChart.getDescription().setEnabled(false);
-
-                BarData barData = new BarData(barDataSet);
-                barChart.setData(barData);
-
-                YAxis leftAxis = barChart.getAxisLeft();
-                leftAxis.setDrawGridLines(false);
-                leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(100f);
-
-                YAxis rightAxis = barChart.getAxisRight();
-                rightAxis.setDrawAxisLine(false);
-                rightAxis.setDrawGridLines(false);
-                rightAxis.setDrawLabels(false);
-
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setValueFormatter(new IndexAxisValueFormatter(labelNames));
-
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
-                xAxis.setDrawAxisLine(false);
-//                xAxis.setGranularity(1f);
-//                xAxis.setLabelCount(labelNames.size());
-//                xAxis.setLabelRotationAngle(0);
-//                barChart.animateY(2000);
-                barChart.invalidate();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void weightChartDay(){
-        query = databaseReference.child("WeightM").child(id).child(month);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                weightList.clear();
-
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    WeightModel weight = ds.getValue(WeightModel.class);
-                    weightList.add(new WeightModel(weight.getDate(),weight.getWeight()));
-                }
-
-                ArrayList<BarEntry> barEntryArrayList = new ArrayList<>();
-                ArrayList<String> labelNames = new ArrayList<>();
-
-                for(int i=0; i< weightList.size(); i++){
-                    String date = weightList.get(i).getDate();
-                    float weight = Float.parseFloat(weightList.get(i).getWeight());
-
-                    // add a new BarEntry for each day of the week
-                    Calendar cal = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                    try {
-                        cal.setTime(sdf.parse(date));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
-                    if (dayOfWeek < 1) {
-                        dayOfWeek += 7;
-                    }
-                    barEntryArrayList.add(new BarEntry(dayOfWeek, weight));
-
-                    // add the day of the week as the label
-                    SimpleDateFormat sdfLabel = new SimpleDateFormat("EEE", Locale.getDefault());
-                    labelNames.add(sdfLabel.format(cal.getTime()));
-                }
-
-                BarDataSet barDataSet = new BarDataSet(barEntryArrayList,"01-"+getDaysInMonth(monthNum)+" "+month+" "+year);
-                barDataSet.setColors(ColorTemplate.createColors(barColors));
-
-                boolean hasNonZeroValue = weightList.stream()
-                        .map(WeightModel::getWeight)
-                        .map(Float::parseFloat)
-                        .anyMatch(w -> w != 0);
-
-                barDataSet.setValueFormatter(new ValueFormatter() {
-                    @Override
-                    public String getFormattedValue(float value) {
-                        if (value == 0) {
-                            return "";
-                        } else {
-                            return String.valueOf(value);
-                        }
-                    }
-                });
-
-                barDataSet.setDrawValues(hasNonZeroValue);
-
-                //description
-                barChart.getDescription().setEnabled(false);
-
-
-                BarData barData = new BarData(barDataSet);
-                barChart.setData(barData);
-
-                YAxis leftAxis = barChart.getAxisLeft();
-                leftAxis.setDrawGridLines(false);
-                leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(100f);
-
-                YAxis rightAxis = barChart.getAxisRight();
-                rightAxis.setDrawAxisLine(false);
-                rightAxis.setDrawGridLines(false);
-                rightAxis.setDrawLabels(false);
-
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
-                xAxis.setValueFormatter(new IndexAxisValueFormatter(labelNames));
-
-                barChart.invalidate();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onClick(View v) {
+                isYearButtonClicked = false;
+                handleChartDisplay(queryPath);
+                monthBtn.setTextColor(ContextCompat.getColor(ChartExample.this, R.color.white));
+                monthBtn.setBackgroundResource(R.drawable.custom_button_rec_red);
+                yearBtn.setTextColor(ContextCompat.getColor(ChartExample.this, R.color.maroon));
+                yearBtn.setBackgroundResource(R.drawable.custom_button_rec_line);
             }
         });
 
@@ -381,12 +175,15 @@ public class ChartExample extends AppCompatActivity {
                     weightList.add(new WeightModel(weight.getDate(),weight.getWeight()));
                 }
 
+                float maxBarValue = 0f;
                 for(int i=0; i< weightList.size(); i++){
-                    String date = weightList.get(i).getDate();
                     float weight = Float.parseFloat(weightList.get(i).getWeight());
 
                     barEntryArrayList.add(new BarEntry(i, weight));
-//                    labelNames.add(date);
+                    float yValue = weight;
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
                 }
 
                 String lastDate = Integer.toString(getDaysInMonth(monthNum));
@@ -421,18 +218,123 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(100f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
 
                 barChart.invalidate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void weightChartYear(){
+
+        query = databaseReference.child("WeightM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                weightList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    String month = monthSnapshot.getKey();
+                    float totalWeight = 0f;
+                    int entryCount = 0;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        WeightModel weight = ds.getValue(WeightModel.class);
+                        weightList.add(new WeightModel(weight.getDate(), weight.getWeight()));
+                        totalWeight += Float.parseFloat(weight.getWeight());
+                        entryCount++;
+                    }
+
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    float averageWeight = Float.parseFloat(decimalFormat.format(totalWeight / entryCount));
+
+                    // Add the average weight value for the month to the barEntryArrayList
+                    barEntryArrayList.add(new BarEntry(getMonthIndex(month), averageWeight));
+                }
+                // Rest of the code...
+
+                Collections.sort(barEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        // Compare the X values of the BarEntry objects
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Loop through the sorted barEntryArrayList
+                float maxBarValue = 0f;
+                for (int i = 0; i < barEntryArrayList.size(); i++) {
+                    BarEntry entry = barEntryArrayList.get(i);
+                    entry.setX(i);
+                    entry.setY(entry.getY()); // Divide the value by 100 for scaling purposes
+
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+
+                // Set data and invalidate the chart
+                BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Average Weight");
+                barDataSet.setColors(ColorTemplate.createColors(barColors));
+                barDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                barDataSet.setValueTextSize(12f);
+
+
+                boolean hasNonZeroValue = weightList.stream()
+                        .map(WeightModel::getWeight)
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                barDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                barDataSet.setDrawValues(hasNonZeroValue);
+
+                //description
+                barChart.getDescription().setEnabled(false);
+
+
+                BarData barData = new BarData(barDataSet);
+                barChart.setData(barData);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
+
+                barChart.invalidate();
+
             }
 
             @Override
@@ -451,15 +353,19 @@ public class ChartExample extends AppCompatActivity {
 
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     AerobicModel weight = ds.getValue(AerobicModel.class);
-                    aerobicList.add(new AerobicModel(weight.getDate(),weight.getDuration()));
+                    aerobicList.add(new AerobicModel(weight.getDate(), weight.getDuration()));
                 }
 
+                float maxBarValue = 0f;
                 for(int i=0; i< aerobicList.size(); i++){
                     String date = aerobicList.get(i).getDate();
                     int weight = Integer.parseInt(aerobicList.get(i).getDuration());
 
                     barEntryArrayList.add(new BarEntry(i, weight));
-//                    labelNames.add(date);
+                    float yValue = weight;
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
                 }
 
                 String lastDate = Integer.toString(getDaysInMonth(monthNum));
@@ -494,16 +400,15 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(70f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
 
                 barChart.invalidate();
             }
@@ -514,6 +419,106 @@ public class ChartExample extends AppCompatActivity {
             }
         });
     }
+
+    public void aerobicChartYear(){
+
+        query = databaseReference.child("AerobicM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                aerobicList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    String month = monthSnapshot.getKey();
+                    float totalWeight = 0f;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        AerobicModel weight = ds.getValue(AerobicModel.class);
+                        aerobicList.add(new AerobicModel(weight.getDate(), weight.getDuration()));
+                        totalWeight += Float.parseFloat(weight.getDuration());
+                    }
+
+                    // Add the average weight value for the month to the barEntryArrayList
+                    barEntryArrayList.add(new BarEntry(getMonthIndex(month), totalWeight));
+                }
+                // Rest of the code...
+                Collections.sort(barEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        // Compare the X values of the BarEntry objects
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Loop through the sorted barEntryArrayList
+                float maxBarValue = 0f;
+
+                for (int i = 0; i < barEntryArrayList.size(); i++) {
+                    BarEntry entry = barEntryArrayList.get(i);
+                    entry.setX(i);
+                    entry.setY(entry.getY()); // Divide the value by 100 for scaling purposes
+
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+                // Set data and invalidate the chart
+                BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Total Duration");
+                barDataSet.setColors(ColorTemplate.createColors(barColors));
+                barDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                barDataSet.setValueTextSize(12f);
+
+                boolean hasNonZeroValue = aerobicList.stream()
+                        .map(AerobicModel::getDuration)
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                barDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                barDataSet.setDrawValues(hasNonZeroValue);
+
+                //description
+                barChart.getDescription().setEnabled(false);
+
+
+                BarData barData = new BarData(barDataSet);
+                barChart.setData(barData);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
+
+                barChart.invalidate();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     public void flexChartMonth(){
         query = databaseReference.child("FlexibilityM").child(id).child(month);
@@ -527,12 +532,16 @@ public class ChartExample extends AppCompatActivity {
                     flexList.add(new FlexibilityModel(weight.getDate(),weight.getDuration()));
                 }
 
+                float maxBarValue = 0f;
                 for(int i=0; i< flexList.size(); i++){
                     String date = flexList.get(i).getDate();
                     int weight = Integer.parseInt(flexList.get(i).getDuration());
 
                     barEntryArrayList.add(new BarEntry(i, weight));
-//                    labelNames.add(date);
+                    float yValue = weight;
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
                 }
 
                 String lastDate = Integer.toString(getDaysInMonth(monthNum));
@@ -567,16 +576,111 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(10f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
+                barChart.invalidate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void flexChartYear(){
+
+        query = databaseReference.child("FlexibilityM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                flexList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    String month = monthSnapshot.getKey();
+                    float totalWeight = 0f;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        FlexibilityModel weight = ds.getValue(FlexibilityModel.class);
+                        flexList.add(new FlexibilityModel(weight.getDate(), weight.getDuration()));
+                        totalWeight += Float.parseFloat(weight.getDuration());
+                    }
+
+                    // Add the average weight value for the month to the barEntryArrayList
+                    barEntryArrayList.add(new BarEntry(getMonthIndex(month), totalWeight));
+                }
+                // Rest of the code...
+                Collections.sort(barEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        // Compare the X values of the BarEntry objects
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Loop through the sorted barEntryArrayList
+                float maxBarValue = 0f;
+                for (int i = 0; i < barEntryArrayList.size(); i++) {
+                    BarEntry entry = barEntryArrayList.get(i);
+                    entry.setX(i);
+                    entry.setY(entry.getY()); // Divide the value by 100 for scaling purposes
+
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+                // Set data and invalidate the chart
+                BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Total Duration");
+                barDataSet.setColors(ColorTemplate.createColors(barColors));
+                barDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                barDataSet.setValueTextSize(12f);
+
+                boolean hasNonZeroValue = flexList.stream()
+                        .map(FlexibilityModel::getDuration)
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                barDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                barDataSet.setDrawValues(hasNonZeroValue);
+
+                //description
+                barChart.getDescription().setEnabled(false);
+
+
+                BarData barData = new BarData(barDataSet);
+                barChart.setData(barData);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
 
                 barChart.invalidate();
             }
@@ -587,6 +691,7 @@ public class ChartExample extends AppCompatActivity {
             }
         });
     }
+
 
     public void strengthChartMonth(){
         query = databaseReference.child("StrengthM").child(id).child(month);
@@ -600,12 +705,16 @@ public class ChartExample extends AppCompatActivity {
                     strengthList.add(new StrengthModel(weight.getDate(),weight.getDuration()));
                 }
 
+                float maxBarValue = 0f;
                 for(int i=0; i< strengthList.size(); i++){
                     String date = strengthList.get(i).getDate();
                     int weight = Integer.parseInt(strengthList.get(i).getDuration());
 
                     barEntryArrayList.add(new BarEntry(i, weight));
-//                    labelNames.add(date);
+                    float yValue = weight;
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
                 }
 
                 String lastDate = Integer.toString(getDaysInMonth(monthNum));
@@ -640,18 +749,114 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(70f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
 
                 barChart.invalidate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void strengthChartYear(){
+        query = databaseReference.child("StrengthM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                strengthList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    String month = monthSnapshot.getKey();
+                    float totalWeight = 0f;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        StrengthModel weight = ds.getValue(StrengthModel.class);
+                        strengthList.add(new StrengthModel(weight.getDate(), weight.getDuration()));
+                        totalWeight += Float.parseFloat(weight.getDuration());
+                    }
+
+                    // Add the average weight value for the month to the barEntryArrayList
+                    barEntryArrayList.add(new BarEntry(getMonthIndex(month), totalWeight));
+                }
+                // Rest of the code...
+                Collections.sort(barEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        // Compare the X values of the BarEntry objects
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Loop through the sorted barEntryArrayList
+                float maxBarValue = 0f;
+                for (int i = 0; i < barEntryArrayList.size(); i++) {
+                    BarEntry entry = barEntryArrayList.get(i);
+                    entry.setX(i);
+                    entry.setY(entry.getY()); // Divide the value by 100 for scaling purposes
+
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+                // Set data and invalidate the chart
+                BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Total Duration");
+                barDataSet.setColors(ColorTemplate.createColors(barColors));
+                barDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                barDataSet.setValueTextSize(12f);
+
+                boolean hasNonZeroValue = strengthList.stream()
+                        .map(StrengthModel::getDuration)
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                barDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                barDataSet.setDrawValues(hasNonZeroValue);
+
+                //description
+                barChart.getDescription().setEnabled(false);
+
+
+                BarData barData = new BarData(barDataSet);
+                barChart.setData(barData);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
+
+                barChart.invalidate();
+
             }
 
             @Override
@@ -673,9 +878,7 @@ public class ChartExample extends AppCompatActivity {
                     bpList.add(new BloodPressureModel(bp.getDate(), bp.getSystolic(), bp.getDiastolic()));
                 }
 
-                ArrayList<BarEntry> systolicEntryArrayList = new ArrayList<>();
-                ArrayList<BarEntry> diastolicEntryArrayList = new ArrayList<>();
-
+                float maxBarValue = 0f;
                 for(int i=0; i< bpList.size(); i++){
                     String date = bpList.get(i).getDate();
                     float systolic = Float.parseFloat(bpList.get(i).getSystolic());
@@ -683,9 +886,17 @@ public class ChartExample extends AppCompatActivity {
 
                     systolicEntryArrayList.add(new BarEntry(i, systolic));
                     diastolicEntryArrayList.add(new BarEntry(i, diastolic));
+
+                    // Update maxBarValue if necessary
+                    if (systolic > maxBarValue) {
+                        maxBarValue = systolic;
+                    }
+                    if (diastolic > maxBarValue) {
+                        maxBarValue = diastolic;
+                    }
                 }
 
-                String lastDate = Integer.toString(getDaysInMonth(monthNum));
+//                String lastDate = Integer.toString(getDaysInMonth(monthNum));
                 BarDataSet systolicBarDataSet = new BarDataSet(systolicEntryArrayList,"Systolic");
                 systolicBarDataSet.setColor(Color.BLUE);
                 systolicBarDataSet.setValueTextColor(Color.BLUE);
@@ -739,16 +950,16 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(200f); // set maximum y-axis value as needed
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
+
 
                 barChart.invalidate();
             }
@@ -760,6 +971,176 @@ public class ChartExample extends AppCompatActivity {
         });
 
 
+    }
+
+    public void bloodPressureChartYear() {
+        query = databaseReference.child("BloodPressureM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                bpList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    // Get month data
+                    String month = monthSnapshot.getKey();
+                    float totalSystolic = 0f;
+                    float totalDiastolic = 0f;
+                    int entryCount = 0;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        BloodPressureModel bp = ds.getValue(BloodPressureModel.class);
+                        bpList.add(new BloodPressureModel(bp.getDate(), bp.getSystolic(), bp.getDiastolic()));
+                        totalSystolic += Float.parseFloat(bp.getSystolic());
+                        totalDiastolic += Float.parseFloat(bp.getDiastolic());
+                        entryCount++;
+                    }
+
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    // Calculate average systolic and diastolic values for the month
+                    float averageSystolic = Float.parseFloat(decimalFormat.format(totalSystolic / entryCount));
+                    float averageDiastolic = Float.parseFloat(decimalFormat.format(totalDiastolic / entryCount));
+
+                    // Add the average values to the barEntryArrayList
+                    systolicEntryArrayList.add(new BarEntry(getMonthIndex(month), averageSystolic));
+                    diastolicEntryArrayList.add(new BarEntry(getMonthIndex(month), averageDiastolic));
+                }
+
+                ArrayList<BarEntry> combinedEntryArrayList = new ArrayList<>();
+                combinedEntryArrayList.addAll(systolicEntryArrayList);
+                combinedEntryArrayList.addAll(diastolicEntryArrayList);
+
+                Collections.sort(combinedEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Separate the sorted entries back into systolicEntryArrayList and diastolicEntryArrayList
+                systolicEntryArrayList.clear();
+                diastolicEntryArrayList.clear();
+
+                /*for (BarEntry entry : combinedEntryArrayList) {
+                    float xValue = entry.getX();
+                    float yValue = entry.getY();
+
+                    if (systolicEntryArrayList.size() < diastolicEntryArrayList.size()) {
+                        systolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                    } else {
+                        diastolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                    }
+                }*/
+
+                // Calculate the maximum bar value
+                float maxBarValue = 0f;
+                for (BarEntry entry : combinedEntryArrayList) {
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+                // Update systolicEntryArrayList and diastolicEntryArrayList with maximum value
+                for (BarEntry entry : combinedEntryArrayList) {
+                    float xValue = entry.getX();
+                    float yValue = entry.getY();
+
+                    if (systolicEntryArrayList.size() < diastolicEntryArrayList.size()) {
+                        systolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                        if (yValue > maxBarValue) {
+                            maxBarValue = yValue;
+                        }
+                    } else {
+                        diastolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                        if (yValue > maxBarValue) {
+                            maxBarValue = yValue;
+                        }
+                    }
+                }
+
+                // Create two BarDataSet objects for systolic and diastolic values
+                BarDataSet systolicBarDataSet = new BarDataSet(systolicEntryArrayList,"Average Systolic");
+                systolicBarDataSet.setColor(Color.BLUE);
+                systolicBarDataSet.setValueTextColor(Color.BLUE);
+
+                BarDataSet diastolicBarDataSet = new BarDataSet(diastolicEntryArrayList,"Average Diastolic");
+                diastolicBarDataSet.setColor(Color.RED);
+                diastolicBarDataSet.setValueTextColor(Color.RED);
+
+                // Set custom label formatter for the y-axis values
+                systolicBarDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                diastolicBarDataSet.setValueFormatter(new DefaultValueFormatter(2));
+
+                // Combine the two BarDataSet objects into a BarData object
+                BarData barData = new BarData(systolicBarDataSet, diastolicBarDataSet);
+
+                float barWidth = 0.35f; // Width of each bar
+                float barSpace = 0.0f; // Space between bars within a group
+                float groupSpace = 0.4f; // Space between bar groups
+
+                barData.setBarWidth(barWidth);
+                barChart.setData(barData);
+
+                // Calculate the total width of the group including spacing
+                float groupWidth = (barWidth + barSpace) * 2;
+                float start = -groupWidth / 2;
+
+                barChart.groupBars(-1, groupSpace, barSpace);
+
+                //exclude 0.0
+                boolean hasNonZeroValue = bpList.stream()
+                        .flatMap(bp -> Stream.of(bp.getSystolic(), bp.getDiastolic()))
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                systolicBarDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0.0f) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                diastolicBarDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0.0f) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                systolicBarDataSet.setDrawValues(hasNonZeroValue);
+                diastolicBarDataSet.setDrawValues(hasNonZeroValue);
+
+                barChart.setData(barData);
+                barChart.invalidate();
+                barChart.getDescription().setEnabled(false);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void heartRateChartMonth(){
@@ -774,9 +1155,7 @@ public class ChartExample extends AppCompatActivity {
                     hrList.add(new HeartRateModel(bp.getDate(), bp.getResthr(), bp.getPeakhr()));
                 }
 
-                ArrayList<BarEntry> systolicEntryArrayList = new ArrayList<>();
-                ArrayList<BarEntry> diastolicEntryArrayList = new ArrayList<>();
-
+                float maxBarValue = 0f;
                 for(int i=0; i< hrList.size(); i++){
                     String date = hrList.get(i).getDate();
                     float systolic = Float.parseFloat(hrList.get(i).getResthr());
@@ -784,9 +1163,16 @@ public class ChartExample extends AppCompatActivity {
 
                     systolicEntryArrayList.add(new BarEntry(i, systolic));
                     diastolicEntryArrayList.add(new BarEntry(i, diastolic));
+
+                    if (systolic > maxBarValue) {
+                        maxBarValue = systolic;
+                    }
+                    if (diastolic > maxBarValue) {
+                        maxBarValue = diastolic;
+                    }
                 }
 
-                String lastDate = Integer.toString(getDaysInMonth(monthNum));
+//                String lastDate = Integer.toString(getDaysInMonth(monthNum));
                 BarDataSet systolicBarDataSet = new BarDataSet(systolicEntryArrayList,"Rest Heart Rate");
                 systolicBarDataSet.setColor(Color.BLUE);
                 systolicBarDataSet.setValueTextColor(Color.BLUE);
@@ -839,16 +1225,15 @@ public class ChartExample extends AppCompatActivity {
                 YAxis leftAxis = barChart.getAxisLeft();
                 leftAxis.setDrawGridLines(false);
                 leftAxis.setAxisMinimum(0f);
-                leftAxis.setAxisMaximum(200f); // set maximum y-axis value as needed
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
 
                 YAxis rightAxis = barChart.getAxisRight();
                 rightAxis.setDrawAxisLine(false);
                 rightAxis.setDrawGridLines(false);
                 rightAxis.setDrawLabels(false);
 
-                XAxis xAxis = barChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setDrawGridLines(false);
+                initializeChartWithDailyLabels();
 
                 barChart.invalidate();
             }
@@ -859,12 +1244,333 @@ public class ChartExample extends AppCompatActivity {
             }
         });
     }
+    public void heartRateChartYear() {
+        query = databaseReference.child("HeartRateM").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                hrList.clear();
+
+                for (DataSnapshot monthSnapshot : snapshot.getChildren()) {
+                    // Get month data
+                    String month = monthSnapshot.getKey();
+                    float totalSystolic = 0f;
+                    float totalDiastolic = 0f;
+                    int entryCount = 0;
+
+                    for (DataSnapshot ds : monthSnapshot.getChildren()) {
+                        HeartRateModel bp = ds.getValue(HeartRateModel.class);
+                        hrList.add(new HeartRateModel(bp.getDate(), bp.getResthr(), bp.getPeakhr()));
+                        totalSystolic += Float.parseFloat(bp.getResthr());
+                        totalDiastolic += Float.parseFloat(bp.getPeakhr());
+                        entryCount++;
+                    }
+
+                    DecimalFormat decimalFormat = new DecimalFormat("#.00");
+                    // Calculate average systolic and diastolic values for the month
+                    float averageSystolic = Float.parseFloat(decimalFormat.format(totalSystolic / entryCount));
+                    float averageDiastolic = Float.parseFloat(decimalFormat.format(totalDiastolic / entryCount));
+
+                    // Add the average values to the barEntryArrayList
+                    systolicEntryArrayList.add(new BarEntry(getMonthIndex(month), averageSystolic));
+                    diastolicEntryArrayList.add(new BarEntry(getMonthIndex(month), averageDiastolic));
+                }
+
+                ArrayList<BarEntry> combinedEntryArrayList = new ArrayList<>();
+                combinedEntryArrayList.addAll(systolicEntryArrayList);
+                combinedEntryArrayList.addAll(diastolicEntryArrayList);
+
+                Collections.sort(combinedEntryArrayList, new Comparator<BarEntry>() {
+                    @Override
+                    public int compare(BarEntry entry1, BarEntry entry2) {
+                        return Float.compare(entry1.getX(), entry2.getX());
+                    }
+                });
+
+                // Separate the sorted entries back into systolicEntryArrayList and diastolicEntryArrayList
+                systolicEntryArrayList.clear();
+                diastolicEntryArrayList.clear();
+
+                /*for (BarEntry entry : combinedEntryArrayList) {
+                    float xValue = entry.getX();
+                    float yValue = entry.getY();
+
+                    if (systolicEntryArrayList.size() < diastolicEntryArrayList.size()) {
+                        systolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                    } else {
+                        diastolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                    }
+                }*/
+
+                // Calculate the maximum bar value
+                float maxBarValue = 0f;
+                for (BarEntry entry : combinedEntryArrayList) {
+                    float yValue = entry.getY();
+                    if (yValue > maxBarValue) {
+                        maxBarValue = yValue;
+                    }
+                }
+
+                // Update systolicEntryArrayList and diastolicEntryArrayList with maximum value
+                for (BarEntry entry : combinedEntryArrayList) {
+                    float xValue = entry.getX();
+                    float yValue = entry.getY();
+
+                    if (systolicEntryArrayList.size() < diastolicEntryArrayList.size()) {
+                        systolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                        if (yValue > maxBarValue) {
+                            maxBarValue = yValue;
+                        }
+                    } else {
+                        diastolicEntryArrayList.add(new BarEntry(xValue, yValue));
+                        if (yValue > maxBarValue) {
+                            maxBarValue = yValue;
+                        }
+                    }
+                }
+
+                // Create two BarDataSet objects for systolic and diastolic values
+                BarDataSet systolicBarDataSet = new BarDataSet(systolicEntryArrayList,"Average Rest Heart Rate");
+                systolicBarDataSet.setColor(Color.BLUE);
+                systolicBarDataSet.setValueTextColor(Color.BLUE);
+
+                BarDataSet diastolicBarDataSet = new BarDataSet(diastolicEntryArrayList,"Average Peak Heart Rate");
+                diastolicBarDataSet.setColor(Color.RED);
+                diastolicBarDataSet.setValueTextColor(Color.RED);
+
+                // Set custom label formatter for the y-axis values
+                systolicBarDataSet.setValueFormatter(new DefaultValueFormatter(2));
+                diastolicBarDataSet.setValueFormatter(new DefaultValueFormatter(2));
+
+                // Combine the two BarDataSet objects into a BarData object
+                BarData barData = new BarData(systolicBarDataSet, diastolicBarDataSet);
+
+                float barWidth = 0.35f; // Width of each bar
+                float barSpace = 0.0f; // Space between bars within a group
+                float groupSpace = 0.4f; // Space between bar groups
+
+                barData.setBarWidth(barWidth);
+                barChart.setData(barData);
+
+                // Calculate the total width of the group including spacing
+                float groupWidth = (barWidth + barSpace) * 2;
+                float start = -groupWidth / 2;
+
+                barChart.groupBars(-1, groupSpace, barSpace);
+
+                //exclude 0.0
+                boolean hasNonZeroValue = hrList.stream()
+                        .flatMap(bp -> Stream.of(bp.getResthr(), bp.getPeakhr()))
+                        .map(Float::parseFloat)
+                        .anyMatch(w -> w != 0);
+
+                systolicBarDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0.0f) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                diastolicBarDataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        if (value == 0.0f) {
+                            return "";
+                        } else {
+                            return String.valueOf(value);
+                        }
+                    }
+                });
+
+                systolicBarDataSet.setDrawValues(hasNonZeroValue);
+                diastolicBarDataSet.setDrawValues(hasNonZeroValue);
+
+                barChart.setData(barData);
+                barChart.invalidate();
+                barChart.getDescription().setEnabled(false);
+
+                YAxis leftAxis = barChart.getAxisLeft();
+                leftAxis.setDrawGridLines(false);
+                leftAxis.setAxisMinimum(0f);
+                float axisMaximum = Math.max(maxBarValue, maxBarValue+5f); // Set a minimum margin of 10f above the highest value
+                leftAxis.setAxisMaximum(axisMaximum);
+
+                YAxis rightAxis = barChart.getAxisRight();
+                rightAxis.setDrawAxisLine(false);
+                rightAxis.setDrawGridLines(false);
+                rightAxis.setDrawLabels(false);
+
+                initializeChartWithMonthlyLabels();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private static int getDaysInMonth(int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, month-1);
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
+
+    private int getMonthIndex(String month) {
+        switch (month) {
+            case "January":
+                return 0;
+            case "February":
+                return 1;
+            case "March":
+                return 2;
+            case "April":
+                return 3;
+            case "May":
+                return 4;
+            case "June":
+                return 5;
+            case "July":
+                return 6;
+            case "August":
+                return 7;
+            case "September":
+                return 8;
+            case "October":
+                return 9;
+            case "November":
+                return 10;
+            case "December":
+                return 11;
+            // Add cases for other months
+            default:
+                return 0;
+        }
+    }
+
+    // Function to handle chart display based on button click
+    private void handleChartDisplay(String queryPath) {
+        barEntryArrayList.clear();
+        systolicEntryArrayList.clear();
+        diastolicEntryArrayList.clear();
+        barChart.clear();
+
+        if(queryPath.equals("weight")){
+            if (isYearButtonClicked) {
+                weightChartYear();
+            } else {
+                weightChartMonth();
+            }
+        }else if(queryPath.equals("bloodPressure")){
+            chartTitle.setText("Blood Pressure Chart");
+
+            if (isYearButtonClicked) {
+                bloodPressureChartYear();
+
+            } else {
+                bloodPressureChartMonth();
+            }
+        }else if(queryPath.equals("heartRate")){
+            chartTitle.setText("Heart Rate Chart");
+
+            if (isYearButtonClicked) {
+                heartRateChartYear();
+
+            } else {
+                heartRateChartMonth();
+            }
+        }else if(queryPath.equals("aerobic")){
+            chartTitle.setText("Aerobic Chart");
+
+            if (isYearButtonClicked) {
+                aerobicChartYear();
+            } else {
+                aerobicChartMonth();
+            }
+        }else if(queryPath.equals("flexibility")){
+            chartTitle.setText("Flexibility Chart");
+
+            if (isYearButtonClicked) {
+                flexChartYear();
+            } else {
+                flexChartMonth();
+            }
+        }else if(queryPath.equals("strength")){
+            chartTitle.setText("Strengthening Chart");
+
+            if (isYearButtonClicked) {
+                strengthChartYear();
+            } else {
+                strengthChartMonth();
+            }
+        }
+    }
+
+    private void initializeChartWithDailyLabels() {
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = zonedDateTime.getYear();
+        int currentMonth = zonedDateTime.getMonthValue();
+
+
+       /* calendar.set(currentYear, currentMonth, 1); // Set the calendar to the first day of the current month
+        int daysInMonth = calendar.getActualMaximum(currentMonth);*/
+
+        YearMonth yearMonth = YearMonth.of(currentYear, currentMonth);
+        int daysInMonth = yearMonth.lengthOfMonth();
+
+        dayLabels = new String[daysInMonth];
+        for (int i = 0; i < daysInMonth; i++) {
+            if ((i + 1) % 5 == 0) {
+                if (daysInMonth == 31 && i == 29) {
+                    dayLabels[i] = "31"; // Show "31" if it ends with 31
+
+                } else {
+                    dayLabels[i] = String.valueOf(i + 1);
+
+                }
+            } else if (i == daysInMonth - 1 && (daysInMonth == 28 || daysInMonth == 29)) {
+                dayLabels[i] = String.valueOf(i + 1); // Show the last day if it ends with 28 or 29
+            } else {
+                dayLabels[i] = ""; // Make other numbers invisible
+            }
+        }
+
+        xAxisFormatter = new IndexAxisValueFormatter(dayLabels);
+        xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setLabelRotationAngle(0f);
+        xAxis.setLabelCount(daysInMonth);
+        xAxis.setTextSize(12f);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+    }
+
+    private void initializeChartWithMonthlyLabels() {
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        monthLabels = new String[]{"Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep","Oct", "Nov", "Dec" };
+
+
+        xAxisFormatter = new IndexAxisValueFormatter(monthLabels);
+        xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setLabelRotationAngle(0f);
+        xAxis.setLabelCount(monthLabels.length);
+        xAxis.setTextSize(12f);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+
+    }
+
 
     @Override
     public void onBackPressed() {
