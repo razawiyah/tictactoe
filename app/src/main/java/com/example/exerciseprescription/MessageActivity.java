@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.exerciseprescription.Adapter.MessageAdapter;
 import com.example.exerciseprescription.Adapter.UserAdapter;
+import com.example.exerciseprescription.class2.ChatModel;
 import com.example.exerciseprescription.class2.DoctorModel;
 import com.example.exerciseprescription.class2.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,8 +50,8 @@ public class MessageActivity extends AppCompatActivity {
     ImageButton send_btn;
     EditText text_send;
 
-    //    MessageAdapter messageAdapter;
-//    List<ChatModel> mChat;
+    MessageAdapter messageAdapter;
+    List<ChatModel> mChat;
     RecyclerView recyclerView;
     private boolean isDoctor = false;
 
@@ -57,9 +59,6 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
-//        fUser = mAuth.getCurrentUser();
-//        id = fUser.getUid();
 
         userId = getIntent().getStringExtra("userId");
 
@@ -96,20 +95,18 @@ public class MessageActivity extends AppCompatActivity {
         });
 
 
-/*
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String msg = text_send.getText().toString().trim();
-                if(!msg.equals("")){
-                    sendMessage(id,userId,msg);
-                }else {
+                if (!msg.equals("")) {
+                    sendMessage(id, userId, msg);
+                } else {
                     errorPopup();
                 }
                 text_send.setText("");
             }
         });
-*/
     }
 
     @Override
@@ -135,6 +132,7 @@ public class MessageActivity extends AppCompatActivity {
                     if (user != null && user.getId().equals(id)) {
                         isDoctor = true;
                         recyclerView.setBackground(ContextCompat.getDrawable(MessageActivity.this, R.drawable.red_bg));
+
                         break;
                     }
                 }
@@ -145,6 +143,8 @@ public class MessageActivity extends AppCompatActivity {
                 } else {
                     readDoctors();
                 }
+
+//                readMessages(id,userId, imageUrl);
             }
 
             @Override
@@ -168,7 +168,7 @@ public class MessageActivity extends AppCompatActivity {
                 username.setText(name);
                 setProfilePic(gender);
 
-//                readMessages(id,userId, imageUrl);
+                readMessages(id,userId, isDoctor,gender);
 
             }
 
@@ -193,7 +193,7 @@ public class MessageActivity extends AppCompatActivity {
                 username.setText(name);
                 setProfilePic(gender);
 
-//                readMessages(id,userId, imageUrl);
+                readMessages(id,userId, isDoctor,gender);
 
             }
 
@@ -260,8 +260,7 @@ public class MessageActivity extends AppCompatActivity {
         dialog.show();
     }
 
-/*
-    private void readMessages(final String myId, final String userId, final String imageUrl) {
+    private void readMessages(final String myId, final String userId, final boolean isDoctor,final String gender) {
         mChat = new ArrayList<>();
 
         Query query = databaseReference.child("Chats");
@@ -284,7 +283,7 @@ public class MessageActivity extends AppCompatActivity {
                     }
                 }
 
-                messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageUrl);
+                messageAdapter = new MessageAdapter(MessageActivity.this, mChat, isDoctor,gender);
                 recyclerView.setAdapter(messageAdapter);
             }
 
@@ -294,5 +293,4 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
     }
-*/
 }
