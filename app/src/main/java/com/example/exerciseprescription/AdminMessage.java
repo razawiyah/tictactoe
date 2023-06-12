@@ -3,7 +3,6 @@ package com.example.exerciseprescription;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -24,9 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class AdminHomepage extends AppCompatActivity {
+public class AdminMessage extends AppCompatActivity {
 
-    CardView exercisePCard,progressCCard;
     View toolbar;
     TextView title;
     ImageView logout,menu;
@@ -42,10 +40,7 @@ public class AdminHomepage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_homepage);
-
-        exercisePCard = findViewById(R.id.exercisePCard);
-        progressCCard = findViewById(R.id.progressCCard);
+        setContentView(R.layout.activity_admin_message);
 
         toolbar = findViewById(R.id.toolbar);
         title = toolbar.findViewById(R.id.title);
@@ -54,28 +49,12 @@ public class AdminHomepage extends AppCompatActivity {
 
         dialog = new SignOut(this);
 
-        title.setText("I-HeLP | HomePage");
+        title.setText("I-HeLP | Message");
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.show();
-            }
-        });
-
-        exercisePCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AdminHomepage.this, AdminExercisePrescription.class));
-                finish();
-            }
-        });
-
-        progressCCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AdminHomepage.this, AdminProgressChartList.class));
-                finish();
             }
         });
 
@@ -93,7 +72,7 @@ public class AdminHomepage extends AppCompatActivity {
         aboutBtn = drawerLayout.findViewById(R.id.aboutBtn);
         updatePBtn = drawerLayout.findViewById(R.id.updatePBtn);
 
-        homepageBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
+        messageBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,17 +101,17 @@ public class AdminHomepage extends AppCompatActivity {
             }
         });
 
-        messageBtn.setOnClickListener(new View.OnClickListener() {
+        homepageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AdminHomepage.this, AdminMessage.class));
+                startActivity(new Intent(AdminMessage.this, AdminHomepage.class));
                 finish();            }
         });
 
         aboutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AdminHomepage.this, AdminAbout.class));
+                startActivity(new Intent(AdminMessage.this, AdminAbout.class));
                 finish();
             }
         });
@@ -140,23 +119,10 @@ public class AdminHomepage extends AppCompatActivity {
         updatePBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AdminHomepage.this, AdminUpdateProfile.class));
+                startActivity(new Intent(AdminMessage.this, AdminUpdateProfile.class));
                 finish();
             }
         });
-    }
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to exit the app?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finishAffinity();
-            }
-        });
-        builder.setNegativeButton("No", null);
-        builder.show();
     }
 
     public static void openDrawer(DrawerLayout drawerLayout) {
@@ -165,10 +131,9 @@ public class AdminHomepage extends AppCompatActivity {
 
     }
 
-    public void featureUnderProgress(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Feature is under Progress");
-        builder.setNeutralButton("OK",null);
-        builder.show();
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AdminMessage.this, AdminHomepage.class));
+        finish();
     }
 }

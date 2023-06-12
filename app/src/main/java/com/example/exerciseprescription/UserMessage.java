@@ -12,11 +12,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,10 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.Calendar;
-import java.util.Locale;
 
-public class UserHomepage extends AppCompatActivity {
-    CardView exercisePCard,progressCCard,healthDCard,exerciseDCard;
+public class UserMessage extends AppCompatActivity {
+
     View toolbar;
     TextView title;
     ImageView logout,menu;
@@ -43,17 +40,10 @@ public class UserHomepage extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser fUser;
 
-    CalendarView calendarView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_homepage);
-
-        exercisePCard = findViewById(R.id.exercisePCard);
-        progressCCard = findViewById(R.id.progressCCard);
-        healthDCard = findViewById(R.id.healthDCard);
-        exerciseDCard = findViewById(R.id.exerciseDCard);
+        setContentView(R.layout.activity_user_message);
 
         toolbar = findViewById(R.id.toolbar);
         title = toolbar.findViewById(R.id.title);
@@ -63,44 +53,12 @@ public class UserHomepage extends AppCompatActivity {
 
         dialog = new SignOut(this);
 
-        title.setText("I-HeLP | HomePage");
+        title.setText("I-HeLP | Message");
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.show();
-            }
-        });
-
-        exercisePCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserExercisePrescription.class));
-                finish();
-            }
-        });
-
-        progressCCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserProgressChart.class));
-                finish();
-            }
-        });
-
-        healthDCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserHealthData.class));
-                finish();
-            }
-        });
-
-        exerciseDCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserExerciseData.class));
-                finish();
             }
         });
 
@@ -122,7 +80,7 @@ public class UserHomepage extends AppCompatActivity {
         aboutBtn = drawerLayout.findViewById(R.id.aboutBtn);
         updatePBtn = drawerLayout.findViewById(R.id.updatePBtn);
 
-        homepageBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
+        messageBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
 
 
 
@@ -168,17 +126,17 @@ public class UserHomepage extends AppCompatActivity {
             }
         });
 
-        messageBtn.setOnClickListener(new View.OnClickListener() {
+        homepageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserMessage.class));
+                startActivity(new Intent(UserMessage.this, UserHomepage.class));
                 finish();            }
         });
 
         aboutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserAbout.class));
+                startActivity(new Intent(UserMessage.this, UserAbout.class));
                 finish();
             }
         });
@@ -186,27 +144,10 @@ public class UserHomepage extends AppCompatActivity {
         updatePBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserUpdateProfile.class));
+                startActivity(new Intent(UserMessage.this, UserUpdateProfile.class));
                 finish();
             }
         });
-
-        calendarView = findViewById(R.id.calendarView);
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Convert the selected date to the desired format (e.g., YYYY-MM-DD)
-                String selectedDate = String.format(Locale.getDefault(), "%02d%02d%04d", dayOfMonth, month + 1,year);
-
-                // Create an Intent to start the next activity
-                Toast.makeText(UserHomepage.this, selectedDate, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(UserHomepage.this, UserListOption.class);
-                intent.putExtra("selectedDate", selectedDate);
-                startActivity(intent);
-            }
-        });
-
     }
 
     public static void openDrawer(DrawerLayout drawerLayout) {
@@ -217,23 +158,7 @@ public class UserHomepage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to exit the app?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finishAffinity();
-            }
-        });
-        builder.setNegativeButton("No", null);
-        builder.show();
+        startActivity(new Intent(UserMessage.this, UserHomepage.class));
+        finish();
     }
-
-    public void featureUnderProgress(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Feature is under Progress");
-        builder.setNeutralButton("OK",null);
-        builder.show();
-    }
-
 }
