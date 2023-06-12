@@ -22,8 +22,7 @@
         android:textStyle="bold"
         android:textSize="22sp"
         android:textColor="@color/white"
-        android:textAlignment="center"
-        />
+        android:textAlignment="center" />
 
     <ImageView
         android:id="@+id/logoutBtn"

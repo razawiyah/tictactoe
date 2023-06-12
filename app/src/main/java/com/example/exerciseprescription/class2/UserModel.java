@@ -3,6 +3,9 @@ package com.example.exerciseprescription.class2;
 public class UserModel {
     String name,dob,height,weight,email,password,gender,safetycheck,id;
 
+    public UserModel() {
+    }
+
     public UserModel(String name, String dob, String height, String weight, String email, String password, String gender, String safetycheck, String id) {
         this.name = name;
         this.dob = dob;

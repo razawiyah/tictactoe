@@ -94,26 +94,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showForgotPasswordDialog();
-
-
-                /*String email = emailET.getText().toString().trim();
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(Login.this, "Please enter your email", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Send password reset email
-                    mAuth.sendPasswordResetEmail(email)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(Login.this, "Password reset email sent", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(Login.this, "Failed to send password reset email", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }*/
             }
         });
     }

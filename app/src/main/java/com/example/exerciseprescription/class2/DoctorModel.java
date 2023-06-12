@@ -4,6 +4,9 @@ public class DoctorModel {
 
     String name,email,password,gender,id;
 
+    public DoctorModel() {
+    }
+
     public DoctorModel(String name, String email, String password, String gender, String id) {
         this.name = name;
         this.email = email;
