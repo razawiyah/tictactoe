@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.exerciseprescription.MessageActivity;
 import com.example.exerciseprescription.R;
 import com.example.exerciseprescription.class2.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -97,7 +98,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             lastMessage(user.getId(), holder.last_msg);
         }else {
             holder.last_msg.setVisibility(View.GONE);
-        }
+        }*/
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +107,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 intent.putExtra("userId",user.getId());
                 mContext.startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override
