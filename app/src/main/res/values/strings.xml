@@ -19,4 +19,6 @@ i-HeLP is a manual exercise prescription app that encourages the target populati
 \t\t\t\tThrough a combination of technology and health, i-HeLP aims to help users with non-chronic and metabolic conditions meet their health goals and improvise their lifestyles.\n
 
 \t\t\t\ti-HeLP which is still under a research project for now incorporates the latest in proven health and behavioral science to become a platform of choice for many users as well as healthcare providers soon.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
