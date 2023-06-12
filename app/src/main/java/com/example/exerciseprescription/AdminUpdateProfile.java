@@ -229,8 +229,8 @@ public class AdminUpdateProfile extends AppCompatActivity {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featureUnderProgress();
-            }
+                startActivity(new Intent(AdminUpdateProfile.this, AdminMessage.class));
+                finish();            }
         });
 
         aboutBtn.setOnClickListener(new View.OnClickListener() {

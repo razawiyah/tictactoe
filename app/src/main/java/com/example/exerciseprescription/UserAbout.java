@@ -127,8 +127,8 @@ public class UserAbout extends AppCompatActivity {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featureUnderProgress();
-            }
+                startActivity(new Intent(UserAbout.this, UserMessage.class));
+                finish();            }
         });
 
         homepageBtn.setOnClickListener(new View.OnClickListener() {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.exerciseprescription.MessageActivity;
 import com.example.exerciseprescription.R;
+import com.example.exerciseprescription.class2.ChatModel;
 import com.example.exerciseprescription.class2.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -79,13 +80,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         String gender = user.getGender();
         if(!isDoctor){
-            holder.username.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
+            if(!ischat){
+                holder.username.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
+            }
             if(gender.equals("male")){
                 holder.profile_image.setImageResource(R.drawable.doctor_man);
             } else {
                 holder.profile_image.setImageResource(R.drawable.doctor_woman);
             }
         }else {
+            if(ischat){
+                holder.username.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
+                holder.last_msg.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.teal));
+
+            }
             if (gender.equals("male")) {
                 holder.profile_image.setImageResource(R.drawable.user_man);
             } else {
@@ -94,11 +102,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         }
 
-        /*if(ischat){
+        if(ischat){
             lastMessage(user.getId(), holder.last_msg);
         }else {
             holder.last_msg.setVisibility(View.GONE);
-        }*/
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +138,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
-/*
     private void lastMessage(final String userId, final TextView last_msg){
         theLastMessage = "default";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -167,5 +174,4 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
     }
-*/
 }

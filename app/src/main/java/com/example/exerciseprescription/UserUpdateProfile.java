@@ -272,8 +272,8 @@ public class UserUpdateProfile extends AppCompatActivity {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featureUnderProgress();
-            }
+                startActivity(new Intent(UserUpdateProfile.this, UserMessage.class));
+                finish();            }
         });
 
         aboutBtn.setOnClickListener(new View.OnClickListener() {

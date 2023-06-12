@@ -107,8 +107,8 @@ public class AdminAbout extends AppCompatActivity {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                featureUnderProgress();
-            }
+                startActivity(new Intent(AdminAbout.this, AdminMessage.class));
+                finish();            }
         });
 
         homepageBtn.setOnClickListener(new View.OnClickListener() {
