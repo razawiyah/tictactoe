@@ -6,6 +6,14 @@ public class UserModel {
     public UserModel() {
     }
 
+    public UserModel(String name, String email, String password, String gender, String id) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.id = id;
+    }
+
     public UserModel(String name, String dob, String height, String weight, String email, String password, String gender, String safetycheck, String id) {
         this.name = name;
         this.dob = dob;
