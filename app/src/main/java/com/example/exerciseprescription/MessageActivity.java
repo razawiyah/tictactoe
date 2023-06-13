@@ -236,6 +236,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
                     databaseReference.child("ChatList").child(id).child(userId).child("id").setValue(userId);
+                    databaseReference.child("ChatList").child(userId).child(id).child("id").setValue(id);
+
                 }
             }
 
