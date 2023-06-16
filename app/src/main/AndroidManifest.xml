@@ -12,124 +12,124 @@
         android:theme="@style/Theme.ExercisePrescription"
         tools:targetApi="31">
         <activity
-            android:name=".MessageActivity"
+            android:name="com.razawiyahdev.exerciseprescription.MessageActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminMessage"
+            android:name="com.razawiyahdev.exerciseprescription.AdminMessage"
             android:exported="false" />
         <activity
-            android:name=".UserMessage"
+            android:name="com.razawiyahdev.exerciseprescription.UserMessage"
             android:exported="false" />
         <activity
-            android:name=".UserDataView"
+            android:name="com.razawiyahdev.exerciseprescription.UserDataView"
             android:exported="false" />
         <activity
-            android:name=".UserListOption"
+            android:name="com.razawiyahdev.exerciseprescription.UserListOption"
             android:exported="false" />
         <activity
-            android:name=".ChartExample"
+            android:name="com.razawiyahdev.exerciseprescription.ChartExample"
             android:exported="false" />
         <activity
-            android:name=".AdminProgressChartListEP"
+            android:name="com.razawiyahdev.exerciseprescription.AdminProgressChartListEP"
             android:exported="false" />
         <activity
-            android:name=".UserUpdateProfile"
+            android:name="com.razawiyahdev.exerciseprescription.UserUpdateProfile"
             android:exported="false" />
         <activity
-            android:name=".UserAbout"
+            android:name="com.razawiyahdev.exerciseprescription.UserAbout"
             android:exported="false" />
         <activity
-            android:name=".AdminExercisePrescriptionModify"
+            android:name="com.razawiyahdev.exerciseprescription.AdminExercisePrescriptionModify"
             android:exported="false" />
         <activity
-            android:name=".AdminHealthChart"
+            android:name="com.razawiyahdev.exerciseprescription.AdminHealthChart"
             android:exported="false" />
         <activity
-            android:name=".AdminExerciseChart"
+            android:name="com.razawiyahdev.exerciseprescription.AdminExerciseChart"
             android:exported="false" />
         <activity
-            android:name=".UserHealthChart"
+            android:name="com.razawiyahdev.exerciseprescription.UserHealthChart"
             android:exported="false" />
         <activity
-            android:name=".UserHeartRateData"
+            android:name="com.razawiyahdev.exerciseprescription.UserHeartRateData"
             android:exported="false" />
         <activity
-            android:name=".UserBloodPressureData"
+            android:name="com.razawiyahdev.exerciseprescription.UserBloodPressureData"
             android:exported="false" />
         <activity
-            android:name=".UserWeightData"
+            android:name="com.razawiyahdev.exerciseprescription.UserWeightData"
             android:exported="false" />
         <activity
-            android:name=".UserStrengthData"
+            android:name="com.razawiyahdev.exerciseprescription.UserStrengthData"
             android:exported="false" />
         <activity
-            android:name=".UserFlexibilityData"
+            android:name="com.razawiyahdev.exerciseprescription.UserFlexibilityData"
             android:exported="false" />
         <activity
-            android:name=".SignOut"
+            android:name="com.razawiyahdev.exerciseprescription.SignOut"
             android:exported="false" />
         <activity
-            android:name=".SignUpDoctor"
+            android:name="com.razawiyahdev.exerciseprescription.SignUpDoctor"
             android:exported="false" />
         <activity
-            android:name=".SignUpChooseAccount"
+            android:name="com.razawiyahdev.exerciseprescription.SignUpChooseAccount"
             android:exported="false" />
         <activity
-            android:name=".AdminProgressChartPatientData"
+            android:name="com.razawiyahdev.exerciseprescription.AdminProgressChartPatientData"
             android:exported="false" />
         <activity
-            android:name=".AdminChart"
+            android:name="com.razawiyahdev.exerciseprescription.AdminChart"
             android:exported="false" />
         <activity
-            android:name=".AdminProgressChartOption"
+            android:name="com.razawiyahdev.exerciseprescription.AdminProgressChartOption"
             android:exported="false" />
         <activity
-            android:name=".AdminProgressChartList"
+            android:name="com.razawiyahdev.exerciseprescription.AdminProgressChartList"
             android:exported="false" />
         <activity
-            android:name=".AdminExercisePrescription"
+            android:name="com.razawiyahdev.exerciseprescription.AdminExercisePrescription"
             android:exported="false" />
         <activity
-            android:name=".AdminAbout"
+            android:name="com.razawiyahdev.exerciseprescription.AdminAbout"
             android:exported="false" />
         <activity
-            android:name=".AdminUpdateProfile"
+            android:name="com.razawiyahdev.exerciseprescription.AdminUpdateProfile"
             android:exported="false" />
         <activity
-            android:name=".UserExerciseChart"
+            android:name="com.razawiyahdev.exerciseprescription.UserExerciseChart"
             android:exported="false" />
         <activity
-            android:name=".UserAerobicData"
+            android:name="com.razawiyahdev.exerciseprescription.UserAerobicData"
             android:exported="false" />
         <activity
-            android:name=".UserExerciseData"
+            android:name="com.razawiyahdev.exerciseprescription.UserExerciseData"
             android:exported="false" />
         <activity
-            android:name=".UserHealthData"
+            android:name="com.razawiyahdev.exerciseprescription.UserHealthData"
             android:exported="false" />
         <activity
-            android:name=".UserProgressChart"
+            android:name="com.razawiyahdev.exerciseprescription.UserProgressChart"
             android:exported="false" />
         <activity
-            android:name=".UserExercisePrescription"
+            android:name="com.razawiyahdev.exerciseprescription.UserExercisePrescription"
             android:exported="false" />
         <activity
-            android:name=".UserHomepage"
+            android:name="com.razawiyahdev.exerciseprescription.UserHomepage"
             android:exported="false" />
         <activity
-            android:name=".AdminHomepage"
+            android:name="com.razawiyahdev.exerciseprescription.AdminHomepage"
             android:exported="false" />
         <activity
-            android:name=".SafetyPrecaution"
+            android:name="com.razawiyahdev.exerciseprescription.SafetyPrecaution"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name="com.razawiyahdev.exerciseprescription.Login"
             android:exported="false" />
         <activity
-            android:name=".SignUpPatient"
+            android:name="com.razawiyahdev.exerciseprescription.SignUpPatient"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.razawiyahdev.exerciseprescription.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

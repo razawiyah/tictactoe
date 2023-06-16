@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/red_bg"
     android:id="@+id/drawer"
-    tools:context=".AdminHomepage">
+    tools:context="com.razawiyahdev.exerciseprescription.AdminHomepage">
 
     <LinearLayout
         android:layout_width="match_parent"

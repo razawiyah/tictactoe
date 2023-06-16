@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "30316724607",
+    "firebase_url": "https://exerciseprescription-c1b89-default-rtdb.firebaseio.com",
+    "project_id": "exerciseprescription-c1b89",
+    "storage_bucket": "exerciseprescription-c1b89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30316724607:android:a78506ceb5d2bc493ada4a",
+        "android_client_info": {
+          "package_name": "com.razawiyahdev.exerciseprescription"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30316724607-ao2e89i7ktdotbkl4l1m9n0s83kcg7n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD6XgxKuMs8jAVth_A1L6PNkZHXDXzngA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30316724607-ao2e89i7ktdotbkl4l1m9n0s83kcg7n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30316724607:android:9267d1b5a1fe42203ada4a",
+        "android_client_info": {
+          "package_name": "com.razawiyahdev.exerciseprescription"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30316724607-g1f704te6i2265r36mu4aurl15edmsl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.razawiyahdev.exerciseprescription",
+            "certificate_hash": "646d1d63c49cc9a72980152354afac90cda7e295"
+          }
+        },
+        {
+          "client_id": "30316724607-ao2e89i7ktdotbkl4l1m9n0s83kcg7n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD6XgxKuMs8jAVth_A1L6PNkZHXDXzngA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30316724607-ao2e89i7ktdotbkl4l1m9n0s83kcg7n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

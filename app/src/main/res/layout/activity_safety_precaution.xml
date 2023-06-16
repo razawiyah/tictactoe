@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:gravity="center"
-    tools:context=".SafetyPrecaution">
+    tools:context="com.razawiyahdev.exerciseprescription.SafetyPrecaution">
 
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"

@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace 'com.example.exerciseprescription'
+    namespace 'com.razawiyahdev.exerciseprescription'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.exerciseprescription"
-        minSdk 28
+        applicationId "com.razawiyahdev.exerciseprescription"
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/red_bg"
-    tools:context=".AdminProgressChartOption">
+    tools:context="com.razawiyahdev.exerciseprescription.AdminProgressChartOption">
 
     <LinearLayout
         android:layout_width="391dp"
