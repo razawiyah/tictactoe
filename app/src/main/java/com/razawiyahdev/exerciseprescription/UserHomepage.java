@@ -84,8 +84,9 @@ public class UserHomepage extends AppCompatActivity {
         progressCCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserHomepage.this, UserProgressChart.class));
-                finish();
+//                startActivity(new Intent(UserHomepage.this, UserProgressChart.class));
+//                finish();
+                featureUnderProgress();
             }
         });
 
@@ -94,6 +95,7 @@ public class UserHomepage extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(UserHomepage.this, UserHealthData.class));
                 finish();
+//                featureUnderProgress();
             }
         });
 
@@ -102,6 +104,7 @@ public class UserHomepage extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(UserHomepage.this, UserExerciseData.class));
                 finish();
+//                featureUnderProgress();
             }
         });
 
@@ -124,8 +127,6 @@ public class UserHomepage extends AppCompatActivity {
         updatePBtn = drawerLayout.findViewById(R.id.updatePBtn);
 
         homepageBtn.setBackgroundColor(ContextCompat.getColor(this,R.color.teal));
-
-
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override

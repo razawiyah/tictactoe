@@ -1,5 +1,6 @@
 package com.razawiyahdev.exerciseprescription;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -44,20 +45,22 @@ public class AdminProgressChartOption extends AppCompatActivity {
         exerciseDCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminExerciseChart.class);
-                intent2.putExtra(PATIENT_ID,patientId);
-                startActivity(intent2);
-                finish();
+//                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminExerciseChart.class);
+//                intent2.putExtra(PATIENT_ID,patientId);
+//                startActivity(intent2);
+//                finish();
+                featureUnderProgress();
             }
         });
 
         healthDCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminHealthChart.class);
-                intent2.putExtra(PATIENT_ID,patientId);
-                startActivity(intent2);
-                finish();
+//                Intent intent2 = new Intent(AdminProgressChartOption.this,AdminHealthChart.class);
+//                intent2.putExtra(PATIENT_ID,patientId);
+//                startActivity(intent2);
+//                finish();
+                featureUnderProgress();
             }
         });
 
@@ -79,5 +82,12 @@ public class AdminProgressChartOption extends AppCompatActivity {
     public void onBackPressed() {
         startActivity(new Intent(AdminProgressChartOption.this, AdminProgressChartList.class));
         finish();
+    }
+
+    public void featureUnderProgress(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Feature is under Progress");
+        builder.setNeutralButton("OK",null);
+        builder.show();
     }
 }

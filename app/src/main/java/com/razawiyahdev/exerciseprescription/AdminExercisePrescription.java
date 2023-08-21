@@ -93,6 +93,7 @@ public class AdminExercisePrescription extends AppCompatActivity {
         nameATV = findViewById(R.id.userType);
         adapterItems = new ArrayAdapter<String>(AdminExercisePrescription.this, R.layout.dropdown_item,ptName);
         nameATV.setAdapter(adapterItems);
+
         nameATV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,6 +103,20 @@ public class AdminExercisePrescription extends AppCompatActivity {
                 Toast.makeText(AdminExercisePrescription.this, "User Type: "+ item, Toast.LENGTH_SHORT).show();
             }
         });
+
+/*
+        nameATV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                String truncatedName = truncateText(item, 20);  // Adjust the length as needed
+
+                // Show success selection with truncated name
+                Toast.makeText(AdminExercisePrescription.this, "User Type: " + truncatedName, Toast.LENGTH_SHORT).show();
+            }
+        });
+*/
+
         nameATV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -221,4 +236,12 @@ public class AdminExercisePrescription extends AppCompatActivity {
         startActivity(new Intent(AdminExercisePrescription.this, AdminHomepage.class));
         finish();
     }
+
+    private String truncateText(String text, int maxLength) {
+        if (text.length() > maxLength) {
+            return text.substring(0, maxLength - 3) + "...";  // Truncate and add ellipsis
+        }
+        return text;
+    }
+
 }

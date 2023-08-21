@@ -25,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpDoctor extends AppCompatActivity {
 
     TextView loginTV;
-
     EditText nameET,emailET,passwordET;
     RadioButton maleRB, femaleRB;
     Button signupBtn;

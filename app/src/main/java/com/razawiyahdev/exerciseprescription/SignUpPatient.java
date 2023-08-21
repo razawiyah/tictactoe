@@ -27,7 +27,6 @@ public class SignUpPatient extends AppCompatActivity {
 
     TextView loginTV,safetyTV;
     public SafetyPrecaution safetyPrecaution;
-
     EditText nameET,dobET,heightET,weightET,emailET,passwordET;
     RadioButton maleRB, femaleRB;
     CheckBox safetyCB;
